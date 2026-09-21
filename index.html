@@ -23,7 +23,10 @@
 
         /* Cabeçalho Premium */
         header { background: linear-gradient(135deg, #000080, #00004d); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; position: relative; }
-        header h1 { font-family: 'Ultra', serif; margin: 0; font-size: 32px; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        
+        /* H1 agora tem efeito Hover para mostrar que é clicável */
+        header h1 { font-family: 'Ultra', serif; margin: 0; font-size: 32px; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); transition: opacity 0.3s; }
+        header h1:hover { opacity: 0.8; }
 
         /* Menu de Navegação */
         .menu-topo { display: flex; gap: 25px; position: absolute; left: 50%; transform: translateX(-50%); }
@@ -68,7 +71,6 @@
         .subcategoria details { margin-bottom: 5px; border-radius: 8px; background-color: #f8f9fa; }
         .subcategoria summary { font-size: 16px; color: #333; padding: 12px 15px; font-weight: 600; display: flex; align-items: center; }
         
-        /* Texto descritivo para categorias especiais */
         .texto-descritivo { padding: 5px 15px 15px 15px; color: #555; font-size: 14px; line-height: 1.6; text-align: justify; }
 
         .itens-produto { list-style-type: none; padding: 0; margin: 0; background-color: white; border-left: 4px solid #000080; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
@@ -85,23 +87,15 @@
         .card-info h3 { margin-top: 0; color: #000080; font-size: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; }
         .lista-contato { list-style: none; padding: 0; margin: 0; }
         .lista-contato li { margin-bottom: 15px; font-size: 16px; color: #444; display: flex; align-items: flex-start; gap: 12px; line-height: 1.5; }
-        .lista-contato i { font-size: 22px; color: #000080; margin-top: 2px; }
         
         .link-contato { text-decoration: none; color: #000080; font-weight: 600; transition: color 0.3s; }
         .link-contato:hover { color: #25D366; }
         .link-insta:hover { color: #E1306C; }
-
-        .fa-whatsapp { color: #25D366 !important; }
-        .fa-instagram { color: #E1306C !important; }
         
         .card-mapa { background-color: white; padding: 10px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
         .card-mapa iframe { width: 100%; height: 450px; border-radius: 8px; border: none; }
         .btn-rota { display: flex; align-items: center; justify-content: center; gap: 10px; background-color: #000080; color: white; text-decoration: none; padding: 15px; border-radius: 8px; margin-top: 10px; font-weight: 700; font-size: 16px; transition: background-color 0.3s; }
         .btn-rota:hover { background-color: #00004d; color: white; }
-
-        /* Botão Flutuante do WhatsApp */
-        .whatsapp-flutuante { position: fixed; bottom: 25px; right: 25px; background-color: #25D366; color: white; border-radius: 50%; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; text-decoration: none; transition: transform 0.3s ease; }
-        .whatsapp-flutuante:hover { transform: scale(1.1); color: white; }
 
         /* ABA 3: SOBRE NÓS */
         .sobre-card { display: flex; gap: 30px; background-color: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); align-items: center; }
@@ -117,7 +111,37 @@
             .missao-destaque { text-align: left; }
         }
 
-        /* NOVO RODAPÉ PROFISSIONAL (FAT FOOTER) */
+        /* Botões Flutuantes (WhatsApp e Voltar ao Topo) */
+        .whatsapp-flutuante { position: fixed; bottom: 25px; right: 25px; background-color: #25D366; color: white; border-radius: 50%; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; text-decoration: none; transition: transform 0.3s ease; }
+        .whatsapp-flutuante:hover { transform: scale(1.1); color: white; }
+
+        /* NOVO: Botão Voltar ao Topo */
+        .btn-voltar-topo {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            background-color: #000080;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            cursor: pointer;
+            opacity: 0; /* Invisível por padrão */
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        .btn-voltar-topo.mostrar { opacity: 1; visibility: visible; transform: translateY(0); }
+        .btn-voltar-topo:hover { background-color: #00004d; transform: scale(1.1); }
+
+        /* Rodapé Premium */
         .rodape-premium { background-color: #000033; color: #e2e8f0; padding: 40px 20px 20px; margin-top: auto; }
         .rodape-container { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 30px; }
         .rodape-coluna h3 { color: white; font-size: 18px; margin-bottom: 15px; font-weight: 600; font-family: 'Ultra', serif; letter-spacing: 1px; }
@@ -133,7 +157,8 @@
 <body>
 
     <header>
-        <h1>Dog Shopping</h1>
+        <!-- H1 com a função de ir para a Home -->
+        <h1 style="cursor: pointer;" onclick="abrirAba('home', document.querySelector('.menu-topo a:nth-child(1)'))">Dog Shopping</h1>
         
         <nav class="menu-topo">
             <a class="aba-link ativo" onclick="abrirAba('home', this)">Home</a>
@@ -199,7 +224,6 @@
                 </div>
             </details>
             
-            <!-- NOVO CATÁLOGO: Outros Pets e Fazenda -->
             <details class="card-principal">
                 <summary><i class="fa-solid fa-horse icone-animal"></i> Outros e Fazenda <i class="bi bi-chevron-down seta"></i></summary>
                 <div class="subcategoria">
@@ -299,12 +323,17 @@
         </div>
     </div>
 
-    <!-- Botão Flutuante do WhatsApp CORRIGIDO -->
+    <!-- Botão Flutuante do WhatsApp -->
     <a href="https://wa.me/5563992335072" target="_blank" class="whatsapp-flutuante" aria-label="Falar no WhatsApp">
         <i class="bi bi-whatsapp"></i>
     </a>
 
-    <!-- NOVO RODAPÉ PROFISSIONAL -->
+    <!-- NOVO: Botão Voltar ao Topo -->
+    <button id="btn-voltar-topo" class="btn-voltar-topo" onclick="voltarAoTopo()" aria-label="Voltar ao topo da página">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <!-- Rodapé Premium -->
     <footer class="rodape-premium">
         <div class="rodape-container">
             <div class="rodape-coluna">
@@ -322,7 +351,7 @@
             <div class="rodape-coluna">
                 <h3 class="sem-fonte">Contato</h3>
                 <ul>
-                    <li><i class="bi bi-geo-alt"></i> R. Antônio Pereira da Costa, Combinado - TO, 77350-000</li>
+                    <li><i class="bi bi-geo-alt"></i> R. Antônio Pereira da Costa, Combinado - TO</li>
                     <li><i class="bi bi-telephone"></i> (63) 99233-5072</li>
                     <li><i class="bi bi-instagram"></i> @dogshop_cmb</li>
                 </ul>
@@ -346,13 +375,26 @@
             if(elementoClicado) {
                 elementoClicado.classList.add('ativo');
             } else {
-                // Caso clique no rodapé, força o menu superior a marcar a aba certa
                 if(idAba === 'home') document.querySelector('.menu-topo a:nth-child(1)').classList.add('ativo');
                 if(idAba === 'informacoes') document.querySelector('.menu-topo a:nth-child(2)').classList.add('ativo');
                 if(idAba === 'sobre') document.querySelector('.menu-topo a:nth-child(3)').classList.add('ativo');
             }
             
-            // Rola a página para cima ao trocar de aba
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // NOVO: Lógica do Botão Voltar ao Topo
+        const btnTopo = document.getElementById('btn-voltar-topo');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                btnTopo.classList.add('mostrar');
+            } else {
+                btnTopo.classList.remove('mostrar');
+            }
+        });
+
+        function voltarAoTopo() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
