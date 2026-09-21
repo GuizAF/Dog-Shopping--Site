@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Shopping</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23000080%22/><text x=%2250%22 y=%2270%22 font-family=%22Arial%22 font-size=%2260%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22>D</text></svg>">
+    
+    <!-- Fontes Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ultra&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome e Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        /* Estilos Globais */
+        body { font-family: 'Work Sans', sans-serif; margin: 0; padding: 0; background-color: #f0f2f5; display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* Cabeçalho Premium */
+        header { background: linear-gradient(135deg, #000080, #00004d); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; position: relative; }
+        header h1 { font-family: 'Ultra', serif; margin: 0; font-size: 32px; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+
+        /* Menu de Navegação */
+        .menu-topo { display: flex; gap: 25px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .menu-topo a { color: white; text-decoration: none; font-size: 16px; font-weight: 500; padding: 8px 12px; border-radius: 6px; transition: all 0.3s ease; cursor: pointer; }
+        .menu-topo a:hover, .menu-topo a.ativo { background-color: rgba(255, 255, 255, 0.2); }
+        .aviso { font-size: 13px; text-align: right; opacity: 0.85; font-weight: 300; }
+
+        @media (max-width: 850px) {
+            header { flex-direction: column; gap: 15px; text-align: center; padding: 15px; }
+            .menu-topo { position: static; transform: none; justify-content: center; width: 100%; flex-wrap: wrap; }
+            .aviso { text-align: center; }
+        }
+
+        /* ESTRUTURA DAS ABAS (SPA) */
+        .conteudo-aba { display: none; animation: fadeIn 0.4s ease-in-out; flex: 1; }
+        .conteudo-aba.ativa { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ABA 1: HOME */
+        .boas-vindas { background-color: white; text-align: center; padding: 20px 10px; color: #000080; }
+        .boas-vindas h2 { margin: 0; font-size: 24px; font-weight: 700; }
+        .boas-vindas p { margin: 5px 0 0 0; color: #666; font-size: 15px; }
+
+        .carrossel { position: relative; width: 100%; height: 350px; background-color: #e2e8f0; overflow: hidden; border-bottom: 5px solid #000080; }
+        .carrossel-inner { display: flex; width: 100%; height: 100%; transition: transform 0.6s ease-in-out; }
+        .slide { min-width: 100%; height: 100%; background-size: cover; background-position: center center; background-repeat: no-repeat; }
+        .controles-carrossel { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; transform: translateY(-50%); padding: 0 20px; box-sizing: border-box; z-index: 5; pointer-events: none; }
+        .btn-carrossel { background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 20px; cursor: pointer; pointer-events: auto; transition: background 0.3s; display: flex; justify-content: center; align-items: center; }
+        .btn-carrossel:hover { background-color: rgba(0, 0, 0, 0.8); }
+
+        .catalogo { padding: 30px 20px; max-width: 1000px; margin: 0 auto; width: 100%; box-sizing: border-box; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; align-items: start; }
+        details.card-principal { background-color: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); overflow: hidden; border: 1px solid #eaeaea; transition: box-shadow 0.3s ease; }
+        details.card-principal:hover { box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+        details.card-principal > summary { padding: 20px; font-size: 20px; font-weight: 700; cursor: pointer; list-style: none; display: flex; align-items: center; color: #000080; border-bottom: 2px solid transparent; }
+        details.card-principal > summary i.icone-animal { font-size: 24px; margin-right: 15px; color: #000080; width: 30px; text-align: center; }
+        details.card-principal[open] > summary { border-bottom: 2px solid #f0f2f5; }
+        summary::-webkit-details-marker { display: none; }
+        summary .seta { margin-left: auto; transition: transform 0.3s; font-size: 16px; color: #999; }
+        details[open] > summary .seta { transform: rotate(180deg); }
+        
+        .subcategoria { padding: 10px 15px 15px 15px; background-color: #fff; }
+        .subcategoria details { margin-bottom: 5px; border-radius: 8px; background-color: #f8f9fa; }
+        .subcategoria summary { font-size: 16px; color: #333; padding: 12px 15px; font-weight: 600; display: flex; align-items: center; }
+        
+        /* Texto descritivo para categorias especiais */
+        .texto-descritivo { padding: 5px 15px 15px 15px; color: #555; font-size: 14px; line-height: 1.6; text-align: justify; }
+
+        .itens-produto { list-style-type: none; padding: 0; margin: 0; background-color: white; border-left: 4px solid #000080; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
+        .itens-produto li { padding: 12px 20px; color: #555; font-size: 14px; border-bottom: 1px solid #eee; transition: background-color 0.2s; cursor: default; }
+        .itens-produto li:hover { background-color: #f0f2f5; color: #000080; }
+        .itens-produto li::before { content: "•"; color: #000080; font-weight: bold; display: inline-block; width: 1em; margin-left: -1em; }
+        .itens-produto li:last-child { border-bottom: none; }
+
+        /* ABA 2: INFORMAÇÕES E CONTATOS */
+        .info-container { max-width: 900px; margin: 40px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 30px; }
+        .titulo-secao { text-align: center; color: #000080; font-size: 28px; margin: 0; font-weight: 800; }
+        .cards-info-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card-info { background-color: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border-top: 4px solid #000080; }
+        .card-info h3 { margin-top: 0; color: #000080; font-size: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; }
+        .lista-contato { list-style: none; padding: 0; margin: 0; }
+        .lista-contato li { margin-bottom: 15px; font-size: 16px; color: #444; display: flex; align-items: flex-start; gap: 12px; line-height: 1.5; }
+        .lista-contato i { font-size: 22px; color: #000080; margin-top: 2px; }
+        
+        .link-contato { text-decoration: none; color: #000080; font-weight: 600; transition: color 0.3s; }
+        .link-contato:hover { color: #25D366; }
+        .link-insta:hover { color: #E1306C; }
+
+        .fa-whatsapp { color: #25D366 !important; }
+        .fa-instagram { color: #E1306C !important; }
+        
+        .card-mapa { background-color: white; padding: 10px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        .card-mapa iframe { width: 100%; height: 450px; border-radius: 8px; border: none; }
+        .btn-rota { display: flex; align-items: center; justify-content: center; gap: 10px; background-color: #000080; color: white; text-decoration: none; padding: 15px; border-radius: 8px; margin-top: 10px; font-weight: 700; font-size: 16px; transition: background-color 0.3s; }
+        .btn-rota:hover { background-color: #00004d; color: white; }
+
+        /* Botão Flutuante do WhatsApp */
+        .whatsapp-flutuante { position: fixed; bottom: 25px; right: 25px; background-color: #25D366; color: white; border-radius: 50%; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; text-decoration: none; transition: transform 0.3s ease; }
+        .whatsapp-flutuante:hover { transform: scale(1.1); color: white; }
+
+        /* ABA 3: SOBRE NÓS */
+        .sobre-card { display: flex; gap: 30px; background-color: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); align-items: center; }
+        .sobre-imagem { flex: 0 0 300px; }
+        .sobre-imagem img { width: 100%; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 3px solid #000080; }
+        .sobre-texto { flex: 1; }
+        .sobre-texto p { font-size: 17px; line-height: 1.6; color: #444; margin-bottom: 15px; }
+        .missao-destaque { background-color: #f8fafc; padding: 15px; border-left: 5px solid #000080; border-radius: 0 8px 8px 0; font-weight: 600; color: #000080; font-style: italic; font-size: 18px; }
+
+        @media (max-width: 768px) {
+            .sobre-card { flex-direction: column; text-align: center; }
+            .sobre-imagem { flex: 0 0 auto; width: 100%; max-width: 350px; margin: 0 auto; }
+            .missao-destaque { text-align: left; }
+        }
+
+        /* NOVO RODAPÉ PROFISSIONAL (FAT FOOTER) */
+        .rodape-premium { background-color: #000033; color: #e2e8f0; padding: 40px 20px 20px; margin-top: auto; }
+        .rodape-container { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 30px; }
+        .rodape-coluna h3 { color: white; font-size: 18px; margin-bottom: 15px; font-weight: 600; font-family: 'Ultra', serif; letter-spacing: 1px; }
+        .rodape-coluna h3.sem-fonte { font-family: 'Work Sans', sans-serif; letter-spacing: 0; }
+        .rodape-coluna p, .rodape-coluna ul { font-size: 14px; line-height: 1.6; color: #cbd5e1; }
+        .rodape-coluna ul { list-style: none; padding: 0; margin: 0; }
+        .rodape-coluna ul li { margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .rodape-coluna a { color: #cbd5e1; text-decoration: none; transition: color 0.3s; cursor: pointer; }
+        .rodape-coluna a:hover { color: white; text-decoration: underline; }
+        .rodape-bottom { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 13px; color: #94a3b8; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Dog Shopping</h1>
+        
+        <nav class="menu-topo">
+            <a class="aba-link ativo" onclick="abrirAba('home', this)">Home</a>
+            <a class="aba-link" onclick="abrirAba('informacoes', this)">Informações</a>
+            <a class="aba-link" onclick="abrirAba('sobre', this)">Sobre Nós</a>
+        </nav>
+
+        <div class="aviso">
+            Página Informativa<br>
+            Não fazemos vendas online
+        </div>
+    </header>
+
+    <!-- ABA 1: HOME (Vitrine) -->
+    <div id="home" class="conteudo-aba ativa">
+        <div class="boas-vindas">
+            <h2>Venha nos conhecer!</h2>
+            <p>O melhor para o seu pet bem pertinho de você.</p>
+        </div>
+
+        <section class="carrossel">
+            <div class="carrossel-inner" id="carrossel-inner">
+                <div class="slide" style="background-image: url('https://cobasiblog.blob.core.windows.net/production-ofc/2021/06/coelho-pode-comer-laranja-1.jpg');"></div>
+                <div class="slide" style="background-image: url('https://turismodenatureza.com.br/wp-content/webp-express/webp-images/uploads/2023/03/passaros-mais-bonitos-do-brasil-1-1200x630.jpg.webp');"></div>
+                <div class="slide" style="background-image: url('https://purina.com.br/sites/default/files/2026-02/Linguagem-dos-gatos-felicidade.jpg');"></div>
+                <div class="slide" style="background-image: url('https://img.nsctotal.com.br/wp-content/uploads/2023/10/pinscher-preto-944x531.jpg');"></div>
+            </div>
+            
+            <div class="controles-carrossel">
+                <button class="btn-carrossel" id="btn-prev"><i class="bi bi-chevron-left"></i></button>
+                <button class="btn-carrossel" id="btn-next"><i class="bi bi-chevron-right"></i></button>
+            </div>
+        </section>
+
+        <section class="catalogo">
+            <details class="card-principal">
+                <summary><i class="fa-solid fa-dog icone-animal"></i> Cachorros <i class="bi bi-chevron-down seta"></i></summary>
+                <div class="subcategoria">
+                    <details class="sub-acc"><summary>Rações <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Pedigree</li><li>Bomguy</li><li>Sapeca</li></ul></details>
+                    <details class="sub-acc"><summary>Vitaminas <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Suplemento Vitamínico A</li><li>Cálcio para Filhotes</li></ul></details>
+                    <details class="sub-acc"><summary>Vacinas <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>V10 (Apenas Informativo)</li><li>Antirrábica</li></ul></details>
+                    <details class="sub-acc"><summary>Remédios <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Antipulgas e Carrapatos</li><li>Vermífugos em Comprimido</li></ul></details>
+                </div>
+            </details>
+
+            <details class="card-principal">
+                <summary><i class="fa-solid fa-cat icone-animal"></i> Gatos <i class="bi bi-chevron-down seta"></i></summary>
+                <div class="subcategoria">
+                    <details class="sub-acc"><summary>Rações <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Whiskas</li><li>Friskies</li><li>Golden Gatos</li></ul></details>
+                    <details class="sub-acc"><summary>Vitaminas <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Pasta de Malte</li><li>Polivitamínicos</li></ul></details>
+                    <details class="sub-acc"><summary>Vacinas <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>V4 e V5 Felina</li><li>Antirrábica</li></ul></details>
+                    <details class="sub-acc"><summary>Remédios <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Antipulgas Pipeta</li><li>Vermífugos Líquidos</li></ul></details>
+                </div>
+            </details>
+
+            <details class="card-principal">
+                <summary><i class="fa-solid fa-dove icone-animal"></i> Aves <i class="bi bi-chevron-down seta"></i></summary>
+                <div class="subcategoria">
+                    <details class="sub-acc"><summary>Rações <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Misturas de Sementes</li><li>Ração Extrusada</li><li>Farinhada</li></ul></details>
+                    <details class="sub-acc"><summary>Vitaminas <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Complexo Vitamínico</li><li>Cálcio e Bloco Mineral</li></ul></details>
+                    <details class="sub-acc"><summary>Vacinas <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Consultar Imunização</li></ul></details>
+                    <details class="sub-acc"><summary>Remédios <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Antiparasitários</li><li>Pomadas Cicatrizantes</li></ul></details>
+                </div>
+            </details>
+            
+            <!-- NOVO CATÁLOGO: Outros Pets e Fazenda -->
+            <details class="card-principal">
+                <summary><i class="fa-solid fa-horse icone-animal"></i> Outros e Fazenda <i class="bi bi-chevron-down seta"></i></summary>
+                <div class="subcategoria">
+                    <div class="texto-descritivo">
+                        Não cuidamos apenas de cães e gatos! A Dog Shopping também atende grandes criadores e pequenos roedores. Temos linhas dedicadas para <strong>equinos, bovinos e ovinos</strong>, além de tudo o que você precisa para <strong>hamsters, coelhos e muito mais</strong>. No campo ou na cidade, o Tontonho tem o que seu animal precisa!
+                    </div>
+                    <ul class="itens-produto">
+                        <li>Rações e Suplementos (Equinos e Bovinos)</li>
+                        <li>Medicamentos de Grande Porte</li>
+                        <li>Alimentação para Roedores (Hamsters, Coelhos)</li>
+                        <li>Acessórios e Gaiolas Especiais</li>
+                    </ul>
+                </div>
+            </details>
+
+            <details class="card-principal">
+                <summary><i class="fa-solid fa-basket-shopping icone-animal"></i> Utilidades <i class="bi bi-chevron-down seta"></i></summary>
+                <div class="subcategoria">
+                    <ul class="itens-produto">
+                        <li>Coleiras e Guias</li>
+                        <li>Potes de Ração e Água</li>
+                        <li>Brinquedos Interativos</li>
+                        <li>Bebedouros Portáteis</li>
+                        <li>Caixas de Transporte</li>
+                    </ul>
+                </div>
+            </details>
+        </section>
+    </div>
+
+    <!-- ABA 2: INFORMAÇÕES E CONTATOS -->
+    <div id="informacoes" class="conteudo-aba">
+        <div class="info-container">
+            <h2 class="titulo-secao">Informações e Localização</h2>
+            
+            <div class="cards-info-wrapper">
+                <div class="card-info">
+                    <h3><i class="fa-solid fa-address-book"></i> Fale com a Gente</h3>
+                    <ul class="lista-contato">
+                        <li>
+                            <i class="bi bi-whatsapp" style="color: #25D366; font-size: 22px;"></i> 
+                            <div><strong>WhatsApp:</strong><br> <a href="https://wa.me/5563992335072" target="_blank" class="link-contato">(63) 99233-5072</a></div>
+                        </li>
+                        <li>
+                            <i class="bi bi-instagram" style="color: #E1306C; font-size: 22px;"></i> 
+                            <div><strong>Instagram:</strong><br> <a href="https://instagram.com/dogshop_cmb" target="_blank" class="link-contato link-insta">@dogshop_cmb</a></div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-store"></i> 
+                            <div><strong>Presencialmente:</strong><br> Quer resolver as coisas "focinho a focinho"? Venha bater um papo ao vivo na loja. O Wi-Fi da vida real não cai e o atendimento é garantido!</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-info">
+                    <h3><i class="fa-solid fa-clock"></i> Horário de Funcionamento</h3>
+                    <ul class="lista-contato">
+                        <li><i class="fa-regular fa-calendar-check" style="color: #000080;"></i><div><strong>Segunda a Sexta:</strong><br> 07:00h às 19:00h</div></li>
+                        <li><i class="fa-regular fa-calendar-check" style="color: #000080;"></i><div><strong>Sábado:</strong><br> 07:00h às 19:00h</div></li>
+                        <li><i class="fa-solid fa-calendar-xmark" style="color: #cc0000;"></i><div><strong>Domingos e Feriados:</strong><br> Fechado (Os pets também precisam de um merecido descanso!)</div></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card-mapa">
+                <iframe src="https://maps.google.com/maps?q=R.%20Ant%C3%B4nio%20Pereira%20da%20Costa,%20Combinado%20-%20TO,%2077350-000&t=&z=16&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=R.+Antônio+Pereira+da+Costa,+Combinado+-+TO,+77350-000" target="_blank" class="btn-rota">
+                    <i class="fa-solid fa-route"></i> Traçar Rota de GPS
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABA 3: SOBRE NÓS -->
+    <div id="sobre" class="conteudo-aba">
+        <div class="info-container">
+            <h2 class="titulo-secao">Conheça Nossa História</h2>
+            
+            <div class="sobre-card">
+                <div class="sobre-imagem">
+                    <img src="tontonho.jpeg" alt="Antônio Zacarias e sua esposa">
+                </div>
+                
+                <div class="sobre-texto">
+                    <p>Olá! Me chamo <strong>Antônio Zacarias</strong>, mas aqui em Combinado todos me conhecem como <strong>Tontonho</strong>. Sou paraibano de coração e apaixonado por animais desde sempre.</p>
+                    
+                    <p>A Dog Shopping nasceu em <strong>00/00/0000</strong> a partir do meu desejo sincero de oferecer o que há de melhor para os nossos pets. Ao abrir as portas, meu grande objetivo sempre foi proporcionar cuidado, conforto e produtos de excelente qualidade, unindo o amor que sinto pelos animais ao compromisso com os tutores.</p>
+                    
+                    <div class="missao-destaque">
+                        <i class="fa-solid fa-quote-left" style="color: #ccc; margin-right: 10px;"></i>
+                        Na nossa loja, quem entra como cliente, sai como amigo!
+                    </div>
+                    
+                    <p style="margin-top: 15px;">Venha conhecer a Dog Shopping. Estamos de braços abertos para receber você e o seu parceiro de quatro patas (ou de asas)!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botão Flutuante do WhatsApp CORRIGIDO -->
+    <a href="https://wa.me/5563992335072" target="_blank" class="whatsapp-flutuante" aria-label="Falar no WhatsApp">
+        <i class="bi bi-whatsapp"></i>
+    </a>
+
+    <!-- NOVO RODAPÉ PROFISSIONAL -->
+    <footer class="rodape-premium">
+        <div class="rodape-container">
+            <div class="rodape-coluna">
+                <h3>Dog Shopping</h3>
+                <p>Na nossa loja, quem entra como cliente, sai como amigo! O melhor cuidado para o seu pet e para os animais da sua fazenda.</p>
+            </div>
+            <div class="rodape-coluna">
+                <h3 class="sem-fonte">Navegação Rápida</h3>
+                <ul>
+                    <li><i class="bi bi-chevron-right"></i> <a onclick="abrirAba('home', document.querySelector('.menu-topo a:nth-child(1)'))">Página Inicial</a></li>
+                    <li><i class="bi bi-chevron-right"></i> <a onclick="abrirAba('informacoes', document.querySelector('.menu-topo a:nth-child(2)'))">Como Chegar</a></li>
+                    <li><i class="bi bi-chevron-right"></i> <a onclick="abrirAba('sobre', document.querySelector('.menu-topo a:nth-child(3)'))">Conheça o Tontonho</a></li>
+                </ul>
+            </div>
+            <div class="rodape-coluna">
+                <h3 class="sem-fonte">Contato</h3>
+                <ul>
+                    <li><i class="bi bi-geo-alt"></i> R. Antônio Pereira da Costa, Combinado - TO, 77350-000</li>
+                    <li><i class="bi bi-telephone"></i> (63) 99233-5072</li>
+                    <li><i class="bi bi-instagram"></i> @dogshop_cmb</li>
+                </ul>
+            </div>
+        </div>
+        <div class="rodape-bottom">
+            &copy; 2026 Dog Shopping. Todos os direitos reservados. Desenvolvido com dedicação.
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        function abrirAba(idAba, elementoClicado) {
+            const abas = document.querySelectorAll('.conteudo-aba');
+            abas.forEach(aba => aba.classList.remove('ativa'));
+            document.getElementById(idAba).classList.add('ativa');
+            
+            const links = document.querySelectorAll('.aba-link');
+            links.forEach(link => link.classList.remove('ativo'));
+            
+            if(elementoClicado) {
+                elementoClicado.classList.add('ativo');
+            } else {
+                // Caso clique no rodapé, força o menu superior a marcar a aba certa
+                if(idAba === 'home') document.querySelector('.menu-topo a:nth-child(1)').classList.add('ativo');
+                if(idAba === 'informacoes') document.querySelector('.menu-topo a:nth-child(2)').classList.add('ativo');
+                if(idAba === 'sobre') document.querySelector('.menu-topo a:nth-child(3)').classList.add('ativo');
+            }
+            
+            // Rola a página para cima ao trocar de aba
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Carrossel
+        const carrosselInner = document.getElementById('carrossel-inner');
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let slideAtual = 0;
+        const tempoSlide = 4000;
+        let intervaloCarrossel;
+
+        function mostrarSlide(index) {
+            slideAtual = (index + totalSlides) % totalSlides;
+            carrosselInner.style.transform = `translateX(-${slideAtual * 100}%)`;
+        }
+        function proximoSlide() { mostrarSlide(slideAtual + 1); }
+        function slideAnterior() { mostrarSlide(slideAtual - 1); }
+        function iniciarCarrossel() { intervaloCarrossel = setInterval(proximoSlide, tempoSlide); }
+
+        document.getElementById('btn-next').addEventListener('click', () => { proximoSlide(); clearInterval(intervaloCarrossel); iniciarCarrossel(); });
+        document.getElementById('btn-prev').addEventListener('click', () => { slideAnterior(); clearInterval(intervaloCarrossel); iniciarCarrossel(); });
+
+        iniciarCarrossel();
+
+        // Catálogo
+        const cardsPrincipais = document.querySelectorAll('.card-principal');
+        cardsPrincipais.forEach(card => {
+            card.addEventListener('toggle', (e) => {
+                if (card.open) {
+                    cardsPrincipais.forEach(outroCard => {
+                        if (outroCard !== card) outroCard.removeAttribute('open');
+                    });
+                }
+            });
+        });
+
+        const subAccordions = document.querySelectorAll('.sub-acc');
+        subAccordions.forEach(sub => {
+            sub.addEventListener('toggle', (e) => {
+                if (sub.open) {
+                    const irmaos = sub.parentElement.querySelectorAll('.sub-acc');
+                    irmaos.forEach(irmao => {
+                        if (irmao !== sub) irmao.removeAttribute('open');
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
