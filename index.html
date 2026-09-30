@@ -19,12 +19,10 @@
 
     <style>
         /* Estilos Globais */
-        body { font-family: 'Work Sans', sans-serif; margin: 0; padding: 0; background-color: #f0f2f5; display: flex; flex-direction: column; min-height: 100vh; }
+        body { font-family: 'Work Sans', sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; display: flex; flex-direction: column; min-height: 100vh; }
 
         /* Cabeçalho Premium */
         header { background: linear-gradient(135deg, #000080, #00004d); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; position: relative; }
-        
-        /* H1 agora tem efeito Hover para mostrar que é clicável */
         header h1 { font-family: 'Ultra', serif; margin: 0; font-size: 32px; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); transition: opacity 0.3s; }
         header h1:hover { opacity: 0.8; }
 
@@ -57,27 +55,83 @@
         .btn-carrossel { background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 20px; cursor: pointer; pointer-events: auto; transition: background 0.3s; display: flex; justify-content: center; align-items: center; }
         .btn-carrossel:hover { background-color: rgba(0, 0, 0, 0.8); }
 
-        .catalogo { padding: 30px 20px; max-width: 1000px; margin: 0 auto; width: 100%; box-sizing: border-box; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; align-items: start; }
-        details.card-principal { background-color: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); overflow: hidden; border: 1px solid #eaeaea; transition: box-shadow 0.3s ease; }
-        details.card-principal:hover { box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
-        details.card-principal > summary { padding: 20px; font-size: 20px; font-weight: 700; cursor: pointer; list-style: none; display: flex; align-items: center; color: #000080; border-bottom: 2px solid transparent; }
-        details.card-principal > summary i.icone-animal { font-size: 24px; margin-right: 15px; color: #000080; width: 30px; text-align: center; }
-        details.card-principal[open] > summary { border-bottom: 2px solid #f0f2f5; }
-        summary::-webkit-details-marker { display: none; }
-        summary .seta { margin-left: auto; transition: transform 0.3s; font-size: 16px; color: #999; }
-        details[open] > summary .seta { transform: rotate(180deg); }
-        
-        .subcategoria { padding: 10px 15px 15px 15px; background-color: #fff; }
-        .subcategoria details { margin-bottom: 5px; border-radius: 8px; background-color: #f8f9fa; }
-        .subcategoria summary { font-size: 16px; color: #333; padding: 12px 15px; font-weight: 600; display: flex; align-items: center; }
-        
-        .texto-descritivo { padding: 5px 15px 15px 15px; color: #555; font-size: 14px; line-height: 1.6; text-align: justify; }
+        .catalogo { padding: 40px 20px; max-width: 1100px; margin: 0 auto; width: 100%; box-sizing: border-box; }
 
-        .itens-produto { list-style-type: none; padding: 0; margin: 0; background-color: white; border-left: 4px solid #000080; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
-        .itens-produto li { padding: 12px 20px; color: #555; font-size: 14px; border-bottom: 1px solid #eee; transition: background-color 0.2s; cursor: default; }
-        .itens-produto li:hover { background-color: #f0f2f5; color: #000080; }
-        .itens-produto li::before { content: "•"; color: #000080; font-weight: bold; display: inline-block; width: 1em; margin-left: -1em; }
-        .itens-produto li:last-child { border-bottom: none; }
+        /* NOVO DESIGN: SEÇÕES LIVRES ESTILO PETZ */
+        .secao-categoria {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+
+        .titulo-categoria {
+            margin: 0 0 20px 0;
+            font-size: 24px;
+            color: #000080;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 15px;
+        }
+
+        .titulo-categoria i { font-size: 28px; }
+
+        .texto-descritivo { padding-bottom: 20px; color: #555; font-size: 15px; line-height: 1.6; }
+
+        .horizontal-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 25px;
+            padding: 10px 5px 20px 5px;
+            scrollbar-width: thin;
+            scroll-behavior: smooth;
+        }
+        
+        .horizontal-scroll::-webkit-scrollbar { height: 8px; }
+        .horizontal-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        .horizontal-scroll::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        .horizontal-scroll::-webkit-scrollbar-thumb:hover { background: #000080; }
+
+        .categoria-card {
+            min-width: 220px;
+            background: #f8fafc; /* Fundo levemente cinza para destacar dentro da seção branca */
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .categoria-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+            border-color: #cbd5e1;
+        }
+
+        .img-redonda {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            border: 4px solid white;
+        }
+
+        .categoria-card h4 { margin: 0 0 15px 0; font-size: 18px; color: #000080; text-align: center; }
+
+        .lista-itens-card { list-style: none; padding: 0; margin: 0; width: 100%; text-align: left; }
+        .lista-itens-card li { font-size: 14px; color: #555; padding: 10px 0; border-bottom: 1px dashed #cbd5e1; display: flex; align-items: flex-start; gap: 8px; transition: color 0.2s; }
+        .lista-itens-card li:hover { color: #000080; font-weight: 500; }
+        .lista-itens-card li:last-child { border-bottom: none; }
+        .lista-itens-card li::before { content: "\F287"; font-family: "bootstrap-icons"; color: #000080; font-size: 12px; margin-top: 1px; }
 
         /* ABA 2: INFORMAÇÕES E CONTATOS */
         .info-container { max-width: 900px; margin: 40px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 30px; }
@@ -111,33 +165,11 @@
             .missao-destaque { text-align: left; }
         }
 
-        /* Botões Flutuantes (WhatsApp e Voltar ao Topo) */
+        /* Botões Flutuantes */
         .whatsapp-flutuante { position: fixed; bottom: 25px; right: 25px; background-color: #25D366; color: white; border-radius: 50%; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; text-decoration: none; transition: transform 0.3s ease; }
         .whatsapp-flutuante:hover { transform: scale(1.1); color: white; }
 
-        /* NOVO: Botão Voltar ao Topo */
-        .btn-voltar-topo {
-            position: fixed;
-            bottom: 25px;
-            left: 25px;
-            background-color: #000080;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 22px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 1000;
-            cursor: pointer;
-            opacity: 0; /* Invisível por padrão */
-            visibility: hidden;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-        }
+        .btn-voltar-topo { position: fixed; bottom: 25px; left: 25px; background-color: #000080; color: white; border: none; border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; font-size: 22px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; cursor: pointer; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; }
         .btn-voltar-topo.mostrar { opacity: 1; visibility: visible; transform: translateY(0); }
         .btn-voltar-topo:hover { background-color: #00004d; transform: scale(1.1); }
 
@@ -157,7 +189,6 @@
 <body>
 
     <header>
-        <!-- H1 com a função de ir para a Home -->
         <h1 style="cursor: pointer;" onclick="abrirAba('home', document.querySelector('.menu-topo a:nth-child(1)'))">Dog Shopping</h1>
         
         <nav class="menu-topo">
@@ -182,75 +213,199 @@
         <section class="carrossel">
             <div class="carrossel-inner" id="carrossel-inner">
                 <div class="slide" style="background-image: url('https://cobasiblog.blob.core.windows.net/production-ofc/2021/06/coelho-pode-comer-laranja-1.jpg');"></div>
-                <div class="slide" style="background-image: url('https://turismodenatureza.com.br/wp-content/webp-express/webp-images/uploads/2023/03/passaros-mais-bonitos-do-brasil-1-1200x630.jpg.webp');"></div>
-                <div class="slide" style="background-image: url('https://purina.com.br/sites/default/files/2026-02/Linguagem-dos-gatos-felicidade.jpg');"></div>
                 <div class="slide" style="background-image: url('https://img.nsctotal.com.br/wp-content/uploads/2023/10/pinscher-preto-944x531.jpg');"></div>
+                <div class="slide" style="background-image: url('https://purina.com.br/sites/default/files/2026-02/Linguagem-dos-gatos-felicidade.jpg');"></div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1602491453631-e2a5ad90a131?auto=format&fit=crop&w=1200&q=80');"></div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&w=1200&q=80');"></div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1425082661705-1834bfd08d98?auto=format&fit=crop&w=1200&q=80');"></div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1200&q=80');"></div>
             </div>
-            
+        
             <div class="controles-carrossel">
                 <button class="btn-carrossel" id="btn-prev"><i class="bi bi-chevron-left"></i></button>
                 <button class="btn-carrossel" id="btn-next"><i class="bi bi-chevron-right"></i></button>
             </div>
         </section>
 
+        <!-- CATÁLOGO NOVO: LIVRE E COM ROLAGEM HORIZONTAL -->
         <section class="catalogo">
-            <details class="card-principal">
-                <summary><i class="fa-solid fa-dog icone-animal"></i> Cachorros <i class="bi bi-chevron-down seta"></i></summary>
-                <div class="subcategoria">
-                    <details class="sub-acc"><summary>Rações <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Pedigree</li><li>Bomguy</li><li>Sapeca</li></ul></details>
-                    <details class="sub-acc"><summary>Vitaminas <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Suplemento Vitamínico A</li><li>Cálcio para Filhotes</li></ul></details>
-                    <details class="sub-acc"><summary>Vacinas <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>V10 (Apenas Informativo)</li><li>Antirrábica</li></ul></details>
-                    <details class="sub-acc"><summary>Remédios <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Antipulgas e Carrapatos</li><li>Vermífugos em Comprimido</li></ul></details>
-                </div>
-            </details>
-
-            <details class="card-principal">
-                <summary><i class="fa-solid fa-cat icone-animal"></i> Gatos <i class="bi bi-chevron-down seta"></i></summary>
-                <div class="subcategoria">
-                    <details class="sub-acc"><summary>Rações <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Whiskas</li><li>Friskies</li><li>Golden Gatos</li></ul></details>
-                    <details class="sub-acc"><summary>Vitaminas <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Pasta de Malte</li><li>Polivitamínicos</li></ul></details>
-                    <details class="sub-acc"><summary>Vacinas <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>V4 e V5 Felina</li><li>Antirrábica</li></ul></details>
-                    <details class="sub-acc"><summary>Remédios <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Antipulgas Pipeta</li><li>Vermífugos Líquidos</li></ul></details>
-                </div>
-            </details>
-
-            <details class="card-principal">
-                <summary><i class="fa-solid fa-dove icone-animal"></i> Aves <i class="bi bi-chevron-down seta"></i></summary>
-                <div class="subcategoria">
-                    <details class="sub-acc"><summary>Rações <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Misturas de Sementes</li><li>Ração Extrusada</li><li>Farinhada</li></ul></details>
-                    <details class="sub-acc"><summary>Vitaminas <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Complexo Vitamínico</li><li>Cálcio e Bloco Mineral</li></ul></details>
-                    <details class="sub-acc"><summary>Vacinas <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Consultar Imunização</li></ul></details>
-                    <details class="sub-acc"><summary>Remédios <i class="bi bi-chevron-down seta"></i></summary><ul class="itens-produto"><li>Antiparasitários</li><li>Pomadas Cicatrizantes</li></ul></details>
-                </div>
-            </details>
             
-            <details class="card-principal">
-                <summary><i class="fa-solid fa-horse icone-animal"></i> Outros e Fazenda <i class="bi bi-chevron-down seta"></i></summary>
-                <div class="subcategoria">
-                    <div class="texto-descritivo">
-                        Não cuidamos apenas de cães e gatos! A Dog Shopping também atende grandes criadores e pequenos roedores. Temos linhas dedicadas para <strong>equinos, bovinos e ovinos</strong>, além de tudo o que você precisa para <strong>hamsters, coelhos e muito mais</strong>. No campo ou na cidade, o Tontonho tem o que seu animal precisa!
+            <!-- SEÇÃO CACHORROS -->
+            <div class="secao-categoria">
+                <h3 class="titulo-categoria"><i class="fa-solid fa-dog"></i> Tudo para Cachorros</h3>
+                <div class="horizontal-scroll">
+                    <div class="categoria-card">
+                        <img src="https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop" alt="Rações Cachorro" class="img-redonda">
+                        <h4>Rações</h4>
+                        <ul class="lista-itens-card">
+                            <li>Pedigree</li>
+                            <li>Bomguy</li>
+                            <li>Sapeca</li>
+                        </ul>
                     </div>
-                    <ul class="itens-produto">
-                        <li>Rações e Suplementos (Equinos e Bovinos)</li>
-                        <li>Medicamentos de Grande Porte</li>
-                        <li>Alimentação para Roedores (Hamsters, Coelhos)</li>
-                        <li>Acessórios e Gaiolas Especiais</li>
-                    </ul>
+                    <div class="categoria-card">
+                        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&h=300&fit=crop" alt="Vitaminas Cachorro" class="img-redonda">
+                        <h4>Vitaminas</h4>
+                        <ul class="lista-itens-card">
+                            <li>Suplemento Vitamínico A</li>
+                            <li>Cálcio para Filhotes</li>
+                        </ul>
+                    </div>
+                    <div class="categoria-card">
+                        <img src="https://images.unsplash.com/photo-1606425271394-c3ca9aa1fc06?w=300&h=300&fit=crop" alt="Vacinas Cachorro" class="img-redonda">
+                        <h4>Vacinas</h4>
+                        <ul class="lista-itens-card">
+                            <li>Antipulgas</li>
+                            <li>Antirrábica</li>
+                        </ul>
+                    </div>
+                    <div class="categoria-card">
+                        <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=300&h=300&fit=crop" alt="Remédios Cachorro" class="img-redonda">
+                        <h4>Remédios</h4>
+                        <ul class="lista-itens-card">
+                            <li>Antipulgas e Carrapatos</li>
+                            <li>Vermífugos em Comprimido</li>
+                        </ul>
+                    </div>
                 </div>
-            </details>
+            </div>
 
-            <details class="card-principal">
-                <summary><i class="fa-solid fa-basket-shopping icone-animal"></i> Utilidades <i class="bi bi-chevron-down seta"></i></summary>
-                <div class="subcategoria">
-                    <ul class="itens-produto">
-                        <li>Coleiras e Guias</li>
-                        <li>Potes de Ração e Água</li>
-                        <li>Brinquedos Interativos</li>
-                        <li>Bebedouros Portáteis</li>
-                        <li>Caixas de Transporte</li>
-                    </ul>
+            <!-- SEÇÃO GATOS -->
+            <div class="secao-categoria">
+                <h3 class="titulo-categoria"><i class="fa-solid fa-cat"></i> Tudo para Gatos</h3>
+                <div class="horizontal-scroll">
+                    <div class="categoria-card">
+                        <img src="https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=300&h=300&fit=crop" alt="Rações Gato" class="img-redonda">
+                        <h4>Rações</h4>
+                        <ul class="lista-itens-card">
+                            <li>Whiskas</li>
+                            <li>Friskies</li>
+                            <li>Golden Gatos</li>
+                        </ul>
+                    </div>
+                    <div class="categoria-card">
+                        <img src="https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?w=300&h=300&fit=crop" alt="Vitaminas Gatos" class="img-redonda">
+                        <h4>Vitaminas</h4>
+                        <ul class="lista-itens-card">
+                            <li>Pasta de Malte</li>
+                            <li>Polivitamínicos</li>
+                        </ul>
+                    </div>
+                    <div class="categoria-card">
+                        <img src="https://imgs.search.brave.com/33jBCyButPj-PP4GfMKFirorbv8afFbCHNwpr9klobs/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bXVsaGVyLmNvbS5i/ci93cC1jb250ZW50/L3VwbG9hZHMvMjAy/MC8wNi9nYXRvLWNv/bS1tLW5hLWNhYmVj/YS0wNjI0LTE0MDB4/ODAwLTEucG5nLndl/YnA" alt="Vacinas Gatos" class="img-redonda">
+                        <h4>Vacinas</h4>
+                        <ul class="lista-itens-card">
+                            <li>V4 e V5 Felina</li>
+                            <li>Antirrábica</li>
+                        </ul>
+                    </div>
+                    <div class="categoria-card">
+                        <img src="https://imgs.search.brave.com/sAPkYORlVHi5vhg7mYOQy9dRm_e0q00Q7LUyuGm9N2I/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9odHRw/Mi5tbHN0YXRpYy5j/b20vRF9OUV9OUF83/ODI5OTgtTUxCODQy/NjkzNjMwMzRfMDUy/MDI1LU8ud2VicA" alt="Remédios Gatos" class="img-redonda">
+                        <h4>Remédios</h4>
+                        <ul class="lista-itens-card">
+                            <li>Antipulgas Pipeta</li>
+                            <li>Vermífugos Líquidos</li>
+                        </ul>
+                    </div>
                 </div>
-            </details>
+            </div>
+
+            <!-- SEÇÃO AVES -->
+            <div class="secao-categoria">
+                <h3 class="titulo-categoria"><i class="fa-solid fa-dove"></i> Tudo para Aves</h3>
+                <div class="horizontal-scroll">
+                    <div class="categoria-card">
+                        <img src="https://imgs.search.brave.com/tXhQx-OMtqtrn2VGcm_O43cMVmnMJAHeGaub1v2kdls/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly90cmV4/cGV0cy5jb20uYnIv/ODc2NS1sYXJnZV9k/ZWZhdWx0L2NvbXBy/YXItcGFzc2Fyby1s/b3Jpcy1tb2x1Y2Fu/by10cmljaG9nbG9z/c3VzLW1vbHVjY2Fu/dXMuanBn" alt="Rações Aves" class="img-redonda">
+                        <h4>Rações</h4>
+                        <ul class="lista-itens-card">
+                            <li>Misturas de Sementes</li>
+                            <li>Ração Extrusada</li>
+                            <li>Farinhada</li>
+                        </ul>
+                    </div>
+                    <div class="categoria-card">
+                        <img src="https://images.tcdn.com.br/img/img_prod/699275/suplemento_vitaminico_avitrin_vitaminas_para_passaros_15ml_1139_1_3e6da89cce7e9e50650d93c5e8c9092a.jpg" alt="Vitaminas Aves" class="img-redonda">
+                        <h4>Vitaminas</h4>
+                        <ul class="lista-itens-card">
+                            <li>Complexo Vitamínico</li>
+                            <li>Cálcio e Bloco Mineral</li>
+                        </ul>
+                    </div>
+                    <div class="categoria-card">
+                        <img src="https://imgs.search.brave.com/DOZt07vKBtKHRMV5LxW8wgfJgTf6ifviSsKDyypcRb0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZW5zLmViYy5jb20u/YnIvTXVpaGNzT2pN/cFUzT1NzeTk5RXU5/ZGZ2RlFNPS8zOTB4/MjQwL3NtYXJ0L2h0/dHBzOi8vYWdlbmNp/YWJyYXNpbC5lYmMu/Y29tLmJyL3NpdGVz/L2RlZmF1bHQvZmls/ZXMvdGh1bWJuYWls/cy9pbWFnZS9zYXJh/bXBvXzMwMTExOWlt/Z18yOTI1MzgyNS5q/cGc_aXRvaz00YVFP/eUVxNQ" alt="Vacinas Aves" class="img-redonda">
+                        <h4>Vacinas</h4>
+                        <ul class="lista-itens-card">
+                            <li>Consultar Imunização</li>
+                        </ul>
+                    </div>
+                    <div class="categoria-card">
+                        <img src="https://imgs.search.brave.com/NK0_c_78CLgi-B3hbrnNCC3UotFSlm63FOhJRjxOZV8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9wZXRk/ZXJtYS5jb20uYnIv/d3AtY29udGVudC91/cGxvYWRzLzIwMjUv/MDcvcGV0ZGVybWEt/cG9tYWRhcy1lLWNy/ZW1lcy1lbS1wZXRz/LTEwMjR4NjgzLmpw/Zw" alt="Remédios Aves" class="img-redonda">
+                        <h4>Remédios</h4>
+                        <ul class="lista-itens-card">
+                            <li>Antiparasitários</li>
+                            <li>Pomadas Cicatrizantes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SEÇÃO OUTROS E FAZENDA -->
+            <div class="secao-categoria">
+                <h3 class="titulo-categoria"><i class="fa-solid fa-horse"></i> Outros e Fazenda</h3>
+                <div class="texto-descritivo">
+                    Não cuidamos apenas de cães e gatos! A Dog Shopping também atende grandes criadores e pequenos roedores. Temos linhas dedicadas para <strong>equinos, bovinos e ovinos</strong>, além de tudo o que você precisa para <strong>hamsters, coelhos e muito mais</strong>.
+                </div>
+                <div class="horizontal-scroll">
+                    <div class="categoria-card">
+                        
+                        <h4>Nutrição</h4>
+                        <ul class="lista-itens-card">
+                            <li>Rações Equinos e Bovinos</li>
+                            <li>Suplementos de Pasto</li>
+                        </ul>
+                    </div>
+                    <div class="categoria-card">
+                         <h4>Suplementos</h4>
+                        <ul class="lista-itens-card">
+                            <li>Remédios de Grande Porte</li>
+                            <li>Antiparasitários</li>
+                        </ul>
+                    </div>
+                    <div class="categoria-card">
+                       
+                        <h4>Roedores</h4>
+                        <ul class="lista-itens-card">
+                            <li>Alimentação (Hamsters, Coelhos)</li>
+                            <li>Acessórios e Gaiolas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEÇÃO UTILIDADES -->
+            <div class="secao-categoria">
+                <h3 class="titulo-categoria"><i class="fa-solid fa-basket-shopping"></i> Utilidades</h3>
+                <div class="horizontal-scroll">
+                    <div class="categoria-card">
+                       
+                        <img src="https://m.media-amazon.com/images/I/51F3NOo+FQL._AC_SY300_SX300_QL70_ML2_.jpg" alt="Coleiras e Guias" class="img-redonda">
+                         <h4>Coleiras e Guias</h4>
+                        <ul class="lista-itens-card">
+                            <li>Coleiras e Guias</li>
+                            <li>Caixas de Transporte</li>
+                        </ul>
+                    </div>
+                    <div class="categoria-card">
+                        <img src="https://images.unsplash.com/photo-1535930749574-1399327ce78f?w=300&h=300&fit=crop" alt="Brinquedos" class="img-redonda">
+                        <h4>Dia a Dia</h4>
+                        <ul class="lista-itens-card">
+                            <li>Potes de Ração e Água</li>
+                            <li>Bebedouros Portáteis</li>
+                            <li>Brinquedos Interativos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </section>
     </div>
 
@@ -281,8 +436,8 @@
                 <div class="card-info">
                     <h3><i class="fa-solid fa-clock"></i> Horário de Funcionamento</h3>
                     <ul class="lista-contato">
-                        <li><i class="fa-regular fa-calendar-check" style="color: #000080;"></i><div><strong>Segunda a Sexta:</strong><br> 07:00h às 19:00h</div></li>
-                        <li><i class="fa-regular fa-calendar-check" style="color: #000080;"></i><div><strong>Sábado:</strong><br> 07:00h às 19:00h</div></li>
+                        <li><i class="fa-regular fa-calendar-check" style="color: #000080;"></i><div><strong>Segunda a Sexta:</strong><br> 07:00h às 18:00h</div></li>
+                        <li><i class="fa-regular fa-calendar-check" style="color: #000080;"></i><div><strong>Sábado:</strong><br> 07:00h às 18:00h</div></li>
                         <li><i class="fa-solid fa-calendar-xmark" style="color: #cc0000;"></i><div><strong>Domingos e Feriados:</strong><br> Fechado (Os pets também precisam de um merecido descanso!)</div></li>
                     </ul>
                 </div>
@@ -310,7 +465,7 @@
                 <div class="sobre-texto">
                     <p>Olá! Me chamo <strong>Antônio Zacarias</strong>, mas aqui em Combinado todos me conhecem como <strong>Tontonho</strong>. Sou paraibano de coração e apaixonado por animais desde sempre.</p>
                     
-                    <p>A Dog Shopping nasceu em <strong>00/00/0000</strong> a partir do meu desejo sincero de oferecer o que há de melhor para os nossos pets. Ao abrir as portas, meu grande objetivo sempre foi proporcionar cuidado, conforto e produtos de excelente qualidade, unindo o amor que sinto pelos animais ao compromisso com os tutores.</p>
+                    <p>A Dog Shopping nasceu em <strong>2016</strong> a partir do meu desejo sincero de oferecer o que há de melhor para os nossos pets. Ao abrir as portas, meu grande objetivo sempre foi proporcionar cuidado, conforto e produtos de excelente qualidade, unindo o amor que sinto pelos animais ao compromisso com os tutores.</p>
                     
                     <div class="missao-destaque">
                         <i class="fa-solid fa-quote-left" style="color: #ccc; margin-right: 10px;"></i>
@@ -323,12 +478,11 @@
         </div>
     </div>
 
-    <!-- Botão Flutuante do WhatsApp -->
+    <!-- Botões Flutuantes -->
     <a href="https://wa.me/5563992335072" target="_blank" class="whatsapp-flutuante" aria-label="Falar no WhatsApp">
         <i class="bi bi-whatsapp"></i>
     </a>
 
-    <!-- NOVO: Botão Voltar ao Topo -->
     <button id="btn-voltar-topo" class="btn-voltar-topo" onclick="voltarAoTopo()" aria-label="Voltar ao topo da página">
         <i class="bi bi-arrow-up"></i>
     </button>
@@ -383,9 +537,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // NOVO: Lógica do Botão Voltar ao Topo
         const btnTopo = document.getElementById('btn-voltar-topo');
-        
         window.addEventListener('scroll', () => {
             if (window.scrollY > 300) {
                 btnTopo.classList.add('mostrar');
@@ -398,7 +550,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Carrossel
         const carrosselInner = document.getElementById('carrossel-inner');
         const slides = document.querySelectorAll('.slide');
         const totalSlides = slides.length;
@@ -418,30 +569,6 @@
         document.getElementById('btn-prev').addEventListener('click', () => { slideAnterior(); clearInterval(intervaloCarrossel); iniciarCarrossel(); });
 
         iniciarCarrossel();
-
-        // Catálogo
-        const cardsPrincipais = document.querySelectorAll('.card-principal');
-        cardsPrincipais.forEach(card => {
-            card.addEventListener('toggle', (e) => {
-                if (card.open) {
-                    cardsPrincipais.forEach(outroCard => {
-                        if (outroCard !== card) outroCard.removeAttribute('open');
-                    });
-                }
-            });
-        });
-
-        const subAccordions = document.querySelectorAll('.sub-acc');
-        subAccordions.forEach(sub => {
-            sub.addEventListener('toggle', (e) => {
-                if (sub.open) {
-                    const irmaos = sub.parentElement.querySelectorAll('.sub-acc');
-                    irmaos.forEach(irmao => {
-                        if (irmao !== sub) irmao.removeAttribute('open');
-                    });
-                }
-            });
-        });
     </script>
 </body>
 </html>
