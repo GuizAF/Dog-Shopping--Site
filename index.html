@@ -184,6 +184,48 @@
         .rodape-coluna a { color: #cbd5e1; text-decoration: none; transition: color 0.3s; cursor: pointer; }
         .rodape-coluna a:hover { color: white; text-decoration: underline; }
         .rodape-bottom { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 13px; color: #94a3b8; }
+
+        /* --- NOVOS ESTILOS: FOTOS REAIS DA LOJA --- */
+        
+        /* Faixa da Fachada (Aba Home) */
+        .faixa-loja-fisica { display: flex; background: white; border-radius: 15px; overflow: hidden; margin: 0 auto 40px auto; max-width: 1100px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
+        .faixa-img { flex: 1; background-size: cover; background-position: center; min-height: 280px; }
+        .faixa-texto { flex: 1; padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+        .faixa-texto h3 { margin: 0 0 15px 0; color: #000080; font-size: 24px; }
+        .faixa-texto p { color: #555; line-height: 1.6; margin-bottom: 25px; }
+        @media (max-width: 768px) { .faixa-loja-fisica { flex-direction: column; margin: 0 20px 40px 20px; } .faixa-img { min-height: 220px; } }
+
+        /* Galeria de Prateleiras (Aba Sobre Nós) */
+       /* Galeria de Prateleiras (Efeito 3D com bloco atrás) */
+        .galeria-loja { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 30px; 
+            margin-top: 30px; 
+            padding: 10px; /* Dá espaço para a sombra 3D não cortar */
+        }
+        
+        .galeria-item { 
+            background-color: white; 
+            padding: 12px; /* Moldura branca ao redor da foto */
+            border-radius: 16px; 
+            border: 2px solid #e2e8f0;
+            box-shadow: 10px 10px 0px #000080; /* O bloco azul sólido atrás */
+            height: 250px; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+        
+        .galeria-item img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            border-radius: 8px; /* Arredonda só os cantos da foto */
+        }
+        
+        .galeria-item:hover { 
+            transform: translate(-5px, -5px); /* Move o cartão para cima e para a esquerda */
+            box-shadow: 15px 15px 0px #000080; /* Aumenta a distância do bloco traseiro */
+        }
     </style>
 </head>
 <body>
@@ -217,7 +259,7 @@
                 <div class="slide" style="background-image: url('https://purina.com.br/sites/default/files/2026-02/Linguagem-dos-gatos-felicidade.jpg');"></div>
                 <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1602491453631-e2a5ad90a131?auto=format&fit=crop&w=1200&q=80');"></div>
                 <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&w=1200&q=80');"></div>
-                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1425082661705-1834bfd08d98?auto=format&fit=crop&w=1200&q=80');"></div>
+                <div class="slide" style="background-image: url('https://imgs.search.brave.com/nTSl-5oTou8F8dd_5ZjmDYbla9Y33kar3pOcorPuOvM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMuZGljaW8uY29t/LmJyL3VwbG9hZC9h/bi9pbS9hbmltYWwt/Y2tlLmpwZz93aWR0/aD02MTA');"></div>
                 <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1200&q=80');"></div>
             </div>
         
@@ -232,6 +274,18 @@
             
             <!-- SEÇÃO CACHORROS -->
             <div class="secao-categoria">
+                <!-- FAIXA DA LOJA FÍSICA -->
+        <div class="faixa-loja-fisica">
+            <!-- Coloque a extensão correta da sua foto aqui (ex: Fachada.jpg ou Fachada.png) -->
+            <div class="faixa-img" style="background-image: url('Fachada.jpg');"></div>
+            <div class="faixa-texto">
+                <h3>Venha conhecer nossa estrutura!</h3>
+                <p>Muito mais do que você vê por aqui. Nossa loja física conta com prateleiras cheias, variedade de marcas e otimos preços. NÃO FAZEMOS VENDAS ONLINE, APENAS NA LOJA FÍSICA.</p>
+                <a onclick="abrirAba('informacoes', document.querySelector('.menu-topo a:nth-child(2)'))" class="btn-rota" style="width: fit-content; cursor: pointer;">
+                    <i class="bi bi-geo-alt"></i> Ver como chegar
+                </a>
+            </div>
+        </div>
                 <h3 class="titulo-categoria"><i class="fa-solid fa-dog"></i> Tudo para Cachorros</h3>
                 <div class="horizontal-scroll">
                     <div class="categoria-card">
@@ -255,7 +309,7 @@
                         <img src="https://images.unsplash.com/photo-1606425271394-c3ca9aa1fc06?w=300&h=300&fit=crop" alt="Vacinas Cachorro" class="img-redonda">
                         <h4>Vacinas</h4>
                         <ul class="lista-itens-card">
-                            <li>Antipulgas</li>
+                            <li>Vermex</li>
                             <li>Antirrábica</li>
                         </ul>
                     </div>
@@ -265,6 +319,7 @@
                         <ul class="lista-itens-card">
                             <li>Antipulgas e Carrapatos</li>
                             <li>Vermífugos em Comprimido</li>
+                            <li>Pomadas Cicatrizantes</li>
                         </ul>
                     </div>
                 </div>
@@ -280,7 +335,7 @@
                         <ul class="lista-itens-card">
                             <li>Whiskas</li>
                             <li>Friskies</li>
-                            <li>Golden Gatos</li>
+                            <li>Finotrato</li>
                         </ul>
                     </div>
                     <div class="categoria-card">
@@ -305,6 +360,7 @@
                         <ul class="lista-itens-card">
                             <li>Antipulgas Pipeta</li>
                             <li>Vermífugos Líquidos</li>
+                            <li>Advocate Gatos</li>
                         </ul>
                     </div>
                 </div>
@@ -455,17 +511,17 @@
     <!-- ABA 3: SOBRE NÓS -->
     <div id="sobre" class="conteudo-aba">
         <div class="info-container">
+
             <h2 class="titulo-secao">Conheça Nossa História</h2>
-            
             <div class="sobre-card">
                 <div class="sobre-imagem">
                     <img src="tontonho.jpeg" alt="Antônio Zacarias e sua esposa">
                 </div>
-                
                 <div class="sobre-texto">
                     <p>Olá! Me chamo <strong>Antônio Zacarias</strong>, mas aqui em Combinado todos me conhecem como <strong>Tontonho</strong>. Sou paraibano de coração e apaixonado por animais desde sempre.</p>
                     
                     <p>A Dog Shopping nasceu em <strong>2016</strong> a partir do meu desejo sincero de oferecer o que há de melhor para os nossos pets. Ao abrir as portas, meu grande objetivo sempre foi proporcionar cuidado, conforto e produtos de excelente qualidade, unindo o amor que sinto pelos animais ao compromisso com os tutores.</p>
+         
                     
                     <div class="missao-destaque">
                         <i class="fa-solid fa-quote-left" style="color: #ccc; margin-right: 10px;"></i>
@@ -473,10 +529,28 @@
                     </div>
                     
                     <p style="margin-top: 15px;">Venha conhecer a Dog Shopping. Estamos de braços abertos para receber você e o seu parceiro de quatro patas (ou de asas)!</p>
+                    
                 </div>
             </div>
-        </div>
+        </div>         
+      </div>
+             <!-- GALERIA DE PRODUTOS -->
+            <h3 class="titulo-categoria" style="margin-top: 40px; justify-content: center; border: none; font-size: 28px;">O que você encontra aqui</h3>
+            
+            <div class="galeria-loja">
+                <!-- Dica: ajuste para Pássaros.jpg, Cavalos.jpeg, etc. dependendo do seu arquivo -->
+                <div class="galeria-item">
+                    <img src="Passaros.jpeg" alt="Prateleira de Aves">
+                </div>
+                <div class="galeria-item">
+                    <img src="Cavalos.jpeg" alt="Produtos para Cavalos">
+                </div>
+                <div class="galeria-item">
+                    <img src="Shampooo.jpeg" alt="Seção de Shampoos e Higiene">
+                </div>
+            </div>
     </div>
+    
 
     <!-- Botões Flutuantes -->
     <a href="https://wa.me/5563992335072" target="_blank" class="whatsapp-flutuante" aria-label="Falar no WhatsApp">
