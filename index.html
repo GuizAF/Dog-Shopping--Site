@@ -1,648 +1,280 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dog Shopping</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23000080%22/><text x=%2250%22 y=%2270%22 font-family=%22Arial%22 font-size=%2260%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22>D</text></svg>">
-    
-    <!-- Fontes Google -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ultra&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome e Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <style>
-        /* Estilos Globais */
-        body { font-family: 'Work Sans', sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; display: flex; flex-direction: column; min-height: 100vh; }
-
-        /* Cabeçalho Premium */
-        header { background: linear-gradient(135deg, #000080, #00004d); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; position: relative; }
-        header h1 { font-family: 'Ultra', serif; margin: 0; font-size: 32px; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); transition: opacity 0.3s; }
-        header h1:hover { opacity: 0.8; }
-
-        /* Menu de Navegação */
-        .menu-topo { display: flex; gap: 25px; position: absolute; left: 50%; transform: translateX(-50%); }
-        .menu-topo a { color: white; text-decoration: none; font-size: 16px; font-weight: 500; padding: 8px 12px; border-radius: 6px; transition: all 0.3s ease; cursor: pointer; }
-        .menu-topo a:hover, .menu-topo a.ativo { background-color: rgba(255, 255, 255, 0.2); }
-        .aviso { font-size: 13px; text-align: right; opacity: 0.85; font-weight: 300; }
-
-        @media (max-width: 850px) {
-            header { flex-direction: column; gap: 15px; text-align: center; padding: 15px; }
-            .menu-topo { position: static; transform: none; justify-content: center; width: 100%; flex-wrap: wrap; }
-            .aviso { text-align: center; }
-        }
-
-        /* ESTRUTURA DAS ABAS (SPA) */
-        .conteudo-aba { display: none; animation: fadeIn 0.4s ease-in-out; flex: 1; }
-        .conteudo-aba.ativa { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ABA 1: HOME */
-        .boas-vindas { background-color: white; text-align: center; padding: 20px 10px; color: #000080; }
-        .boas-vindas h2 { margin: 0; font-size: 24px; font-weight: 700; }
-        .boas-vindas p { margin: 5px 0 0 0; color: #666; font-size: 15px; }
-
-        .carrossel { position: relative; width: 100%; height: 350px; background-color: #e2e8f0; overflow: hidden; border-bottom: 5px solid #000080; }
-        .carrossel-inner { display: flex; width: 100%; height: 100%; transition: transform 0.6s ease-in-out; }
-        .slide { min-width: 100%; height: 100%; background-size: cover; background-position: center center; background-repeat: no-repeat; }
-        .controles-carrossel { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; transform: translateY(-50%); padding: 0 20px; box-sizing: border-box; z-index: 5; pointer-events: none; }
-        .btn-carrossel { background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 20px; cursor: pointer; pointer-events: auto; transition: background 0.3s; display: flex; justify-content: center; align-items: center; }
-        .btn-carrossel:hover { background-color: rgba(0, 0, 0, 0.8); }
-
-        .catalogo { padding: 40px 20px; max-width: 1100px; margin: 0 auto; width: 100%; box-sizing: border-box; }
-
-        /* NOVO DESIGN: SEÇÕES LIVRES ESTILO PETZ */
-        .secao-categoria {
-            background-color: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-        }
-
-        .titulo-categoria {
-            margin: 0 0 20px 0;
-            font-size: 24px;
-            color: #000080;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            border-bottom: 2px solid #f0f2f5;
-            padding-bottom: 15px;
-        }
-
-        .titulo-categoria i { font-size: 28px; }
-
-        .texto-descritivo { padding-bottom: 20px; color: #555; font-size: 15px; line-height: 1.6; }
-
-        .horizontal-scroll {
-            display: flex;
-            overflow-x: auto;
-            gap: 25px;
-            padding: 10px 5px 20px 5px;
-            scrollbar-width: thin;
-            scroll-behavior: smooth;
-        }
-        
-        .horizontal-scroll::-webkit-scrollbar { height: 8px; }
-        .horizontal-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
-        .horizontal-scroll::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
-        .horizontal-scroll::-webkit-scrollbar-thumb:hover { background: #000080; }
-
-        .categoria-card {
-            min-width: 220px;
-            background: #f8fafc; /* Fundo levemente cinza para destacar dentro da seção branca */
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .categoria-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
-            border-color: #cbd5e1;
-        }
-
-        .img-redonda {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 15px;
-            border: 4px solid white;
-        }
-
-        .categoria-card h4 { margin: 0 0 15px 0; font-size: 18px; color: #000080; text-align: center; }
-
-        .lista-itens-card { list-style: none; padding: 0; margin: 0; width: 100%; text-align: left; }
-        .lista-itens-card li { font-size: 14px; color: #555; padding: 10px 0; border-bottom: 1px dashed #cbd5e1; display: flex; align-items: flex-start; gap: 8px; transition: color 0.2s; }
-        .lista-itens-card li:hover { color: #000080; font-weight: 500; }
-        .lista-itens-card li:last-child { border-bottom: none; }
-        .lista-itens-card li::before { content: "\F287"; font-family: "bootstrap-icons"; color: #000080; font-size: 12px; margin-top: 1px; }
-
-        /* ABA 2: INFORMAÇÕES E CONTATOS */
-        .info-container { max-width: 900px; margin: 40px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 30px; }
-        .titulo-secao { text-align: center; color: #000080; font-size: 28px; margin: 0; font-weight: 800; }
-        .cards-info-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card-info { background-color: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border-top: 4px solid #000080; }
-        .card-info h3 { margin-top: 0; color: #000080; font-size: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; }
-        .lista-contato { list-style: none; padding: 0; margin: 0; }
-        .lista-contato li { margin-bottom: 15px; font-size: 16px; color: #444; display: flex; align-items: flex-start; gap: 12px; line-height: 1.5; }
-        
-        .link-contato { text-decoration: none; color: #000080; font-weight: 600; transition: color 0.3s; }
-        .link-contato:hover { color: #25D366; }
-        .link-insta:hover { color: #E1306C; }
-        
-        .card-mapa { background-color: white; padding: 10px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-        .card-mapa iframe { width: 100%; height: 450px; border-radius: 8px; border: none; }
-        .btn-rota { display: flex; align-items: center; justify-content: center; gap: 10px; background-color: #000080; color: white; text-decoration: none; padding: 15px; border-radius: 8px; margin-top: 10px; font-weight: 700; font-size: 16px; transition: background-color 0.3s; }
-        .btn-rota:hover { background-color: #00004d; color: white; }
-
-        /* ABA 3: SOBRE NÓS */
-        .sobre-card { display: flex; gap: 30px; background-color: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); align-items: center; }
-        .sobre-imagem { flex: 0 0 300px; }
-        .sobre-imagem img { width: 100%; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 3px solid #000080; }
-        .sobre-texto { flex: 1; }
-        .sobre-texto p { font-size: 17px; line-height: 1.6; color: #444; margin-bottom: 15px; }
-        .missao-destaque { background-color: #f8fafc; padding: 15px; border-left: 5px solid #000080; border-radius: 0 8px 8px 0; font-weight: 600; color: #000080; font-style: italic; font-size: 18px; }
-
-        @media (max-width: 768px) {
-            .sobre-card { flex-direction: column; text-align: center; }
-            .sobre-imagem { flex: 0 0 auto; width: 100%; max-width: 350px; margin: 0 auto; }
-            .missao-destaque { text-align: left; }
-        }
-
-        /* Botões Flutuantes */
-        .whatsapp-flutuante { position: fixed; bottom: 25px; right: 25px; background-color: #25D366; color: white; border-radius: 50%; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; text-decoration: none; transition: transform 0.3s ease; }
-        .whatsapp-flutuante:hover { transform: scale(1.1); color: white; }
-
-        .btn-voltar-topo { position: fixed; bottom: 25px; left: 25px; background-color: #000080; color: white; border: none; border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; font-size: 22px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; cursor: pointer; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; }
-        .btn-voltar-topo.mostrar { opacity: 1; visibility: visible; transform: translateY(0); }
-        .btn-voltar-topo:hover { background-color: #00004d; transform: scale(1.1); }
-
-        /* Rodapé Premium */
-        .rodape-premium { background-color: #000033; color: #e2e8f0; padding: 40px 20px 20px; margin-top: auto; }
-        .rodape-container { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 30px; }
-        .rodape-coluna h3 { color: white; font-size: 18px; margin-bottom: 15px; font-weight: 600; font-family: 'Ultra', serif; letter-spacing: 1px; }
-        .rodape-coluna h3.sem-fonte { font-family: 'Work Sans', sans-serif; letter-spacing: 0; }
-        .rodape-coluna p, .rodape-coluna ul { font-size: 14px; line-height: 1.6; color: #cbd5e1; }
-        .rodape-coluna ul { list-style: none; padding: 0; margin: 0; }
-        .rodape-coluna ul li { margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .rodape-coluna a { color: #cbd5e1; text-decoration: none; transition: color 0.3s; cursor: pointer; }
-        .rodape-coluna a:hover { color: white; text-decoration: underline; }
-        .rodape-bottom { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 13px; color: #94a3b8; }
-
-        /* --- NOVOS ESTILOS: FOTOS REAIS DA LOJA --- */
-        
-        /* Faixa da Fachada (Aba Home) */
-        .faixa-loja-fisica { display: flex; background: white; border-radius: 15px; overflow: hidden; margin: 0 auto 40px auto; max-width: 1100px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
-        .faixa-img { flex: 1; background-size: cover; background-position: center; min-height: 280px; }
-        .faixa-texto { flex: 1; padding: 40px; display: flex; flex-direction: column; justify-content: center; }
-        .faixa-texto h3 { margin: 0 0 15px 0; color: #000080; font-size: 24px; }
-        .faixa-texto p { color: #555; line-height: 1.6; margin-bottom: 25px; }
-        @media (max-width: 768px) { .faixa-loja-fisica { flex-direction: column; margin: 0 20px 40px 20px; } .faixa-img { min-height: 220px; } }
-
-        /* Galeria de Prateleiras (Aba Sobre Nós) */
-       /* Galeria de Prateleiras (Efeito 3D com bloco atrás) */
-        .galeria-loja { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-            gap: 30px; 
-            margin-top: 30px; 
-            padding: 10px; /* Dá espaço para a sombra 3D não cortar */
-        }
-        
-        .galeria-item { 
-            background-color: white; 
-            padding: 12px; /* Moldura branca ao redor da foto */
-            border-radius: 16px; 
-            border: 2px solid #e2e8f0;
-            box-shadow: 10px 10px 0px #000080; /* O bloco azul sólido atrás */
-            height: 250px; 
-            transition: transform 0.3s ease, box-shadow 0.3s ease; 
-        }
-        
-        .galeria-item img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            border-radius: 8px; /* Arredonda só os cantos da foto */
-        }
-        
-        .galeria-item:hover { 
-            transform: translate(-5px, -5px); /* Move o cartão para cima e para a esquerda */
-            box-shadow: 15px 15px 0px #000080; /* Aumenta a distância do bloco traseiro */
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dog Shopping — Combinado, TO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+:root{--cobalt:#061fff;--lime:#d3ff56;--blush:#ffcfd1;--lav:#efe5ff;--bloom:#ceb3ff;--soft:#dfceff;--white:#fff;
+--font:'Good Sans','DM Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--lav);color:var(--cobalt);font:400 16px/1.5 var(--font);letter-spacing:-.015em;font-feature-settings:"ss01","cv11"}
+a{color:inherit}h1,h2,h3,p,ul{margin:0}ul{padding:0;list-style:none}img{display:block}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:3px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+.bar{background:var(--cobalt);color:var(--white);text-align:center;font-size:13px;padding:11px 16px}
+header.top{position:sticky;top:0;z-index:50;background:var(--lav);border-bottom:1px solid var(--cobalt)}
+nav{display:flex;align-items:center;justify-content:space-between;gap:10px 24px;padding:12px 0;flex-wrap:wrap}
+.logo{font-weight:700;font-size:26px;letter-spacing:-.05em;background:none;border:0;color:inherit;font-family:inherit;padding:0;cursor:pointer}
+.tabs{display:flex;gap:26px;order:2}
+.tab{background:none;border:0;border-bottom:2px solid transparent;color:inherit;font:500 12px/2.2 var(--font);text-transform:uppercase;letter-spacing:.02em;cursor:pointer;padding:0}
+.tab[aria-selected=true]{border-color:var(--cobalt)}
+.navcta{order:3}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:500 16px/1.1 var(--font);text-transform:uppercase;text-decoration:none;padding:14px 32px;border-radius:6.95px;border:1px solid var(--cobalt);cursor:pointer;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.sm{padding:10px 18px;font-size:13px}
+.p{background:var(--cobalt);color:var(--white)}.s{background:var(--lime);color:var(--cobalt)}
+.ctas{display:flex;gap:14px;flex-wrap:wrap}
+[role=tabpanel][hidden]{display:none}
+h1{font-size:clamp(46px,8vw,86px);font-weight:700;line-height:1;letter-spacing:-.05em}
+h2{font-size:clamp(36px,5.6vw,68px);font-weight:700;line-height:1;letter-spacing:-.05em;margin-bottom:18px}
+h3{font-size:30px;font-weight:700;line-height:1.05;letter-spacing:-.04em}
+.lead{font-size:18px;max-width:560px}
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:44px;align-items:center;padding:48px 0 56px}
+.hero .lead{margin:22px 0 28px}
+.badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--cobalt);border-radius:99px;padding:6px 14px;font-size:14px;font-weight:500;margin-bottom:20px;background:var(--white)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--cobalt)}
+.badge.on .dot{background:#18c25a}
+.photo{position:relative;border-radius:20px;overflow:hidden;background:var(--soft);border:1px solid var(--cobalt)}
+.photo img{width:100%;height:100%;object-fit:cover}
+.hero .photo{aspect-ratio:4/4.2;transform:rotate(2deg);box-shadow:none}
+.quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-bottom:80px}
+.q{border:1px solid var(--cobalt);border-radius:20px;padding:24px;display:flex;gap:16px;align-items:flex-start;text-decoration:none;background:var(--white)}
+.q i{font-size:30px;line-height:1}
+.q b{display:block;font-size:20px;letter-spacing:-.03em}.q span{font-size:15px}
+.q.l{background:var(--lime)}.q.c{background:var(--cobalt);color:var(--white)}
+.shop{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--cobalt);border-radius:20px;overflow:hidden;margin-bottom:80px;background:var(--white)}
+.shop .photo{border:0;border-radius:0;min-height:300px}
+.shop .t{padding:40px;display:flex;flex-direction:column;gap:16px;align-items:flex-start;justify-content:center}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin:26px 0 0}
+.chip{background:var(--white);color:var(--cobalt);border:1px solid var(--cobalt);border-radius:99px;padding:9px 18px;font:500 14px/1 var(--font);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--cobalt);color:var(--white)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:20px;margin-top:30px}
+.card{background:var(--blush);border:1px solid var(--cobalt);border-radius:20px;overflow:hidden;display:flex;flex-direction:column}
+.card.w{background:var(--white)}.card[hidden]{display:none}
+.card .photo{border:0;border-radius:0;border-bottom:1px solid var(--cobalt);aspect-ratio:16/9}
+.card .b{padding:24px 26px 28px;display:flex;flex-direction:column;gap:14px}
+.card p{font-size:15px}
+.it{display:flex;gap:14px;align-items:center;padding-top:12px;border-top:1px solid var(--cobalt)}
+.it .th{flex:0 0 58px;width:58px;height:58px;border-radius:50%;overflow:hidden;background:var(--soft);border:1px solid var(--cobalt)}
+.it .th img{width:100%;height:100%;object-fit:cover}
+.it b{display:block;font-size:17px;line-height:1.2}.it span{font-size:14px;display:block;line-height:1.35}
+section{padding-bottom:90px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.panel{border:1px solid var(--cobalt);border-radius:20px;padding:29px;display:flex;flex-direction:column;gap:14px;align-items:flex-start;background:var(--white)}
+.panel.hi{background:var(--bloom)}
+.row{display:flex;justify-content:space-between;gap:16px;width:100%;padding:12px 0;border-top:1px solid var(--cobalt)}
+.row.today{background:var(--lime);margin:0 -29px;width:calc(100% + 58px);padding:12px 29px}
+.route{margin-top:20px;background:var(--cobalt);color:var(--white);border-radius:20px;padding:34px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
+.route h3{font-size:clamp(30px,4.4vw,48px);margin-bottom:8px}
+.route .btn{background:var(--lime);color:var(--cobalt);border-color:var(--lime);font-size:18px;padding:20px 38px}
+.map{margin-top:20px;border:1px solid var(--cobalt);border-radius:20px;overflow:hidden}
+.map iframe{display:block;width:100%;height:420px;border:0}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:36px}
+.about p{font-size:18px}.about p+p{margin-top:16px}
+.about .photo{aspect-ratio:1/1;max-width:440px}
+.blob{background:var(--lime);border-radius:48% 52% 45% 55%/55% 45% 55% 45%;padding:50px 46px;font-size:24px;line-height:1.25;letter-spacing:-.02em;font-weight:500;margin-top:24px}
+.gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:44px}
+.gal .photo{aspect-ratio:4/3}
+.gal span{position:absolute;left:16px;bottom:14px;background:var(--lime);border:1px solid var(--cobalt);border-radius:99px;padding:4px 14px;font-weight:700;font-size:15px}
+.fab{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--lime);color:var(--cobalt);border:1px solid var(--cobalt);border-radius:99px;padding:14px 22px;display:flex;align-items:center;gap:10px;font:700 16px/1 var(--font);text-decoration:none}
+.fab i{font-size:22px}.fab:hover{transform:translateY(-3px)}
+.up{position:fixed;left:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:60;width:50px;height:50px;border-radius:50%;background:var(--cobalt);color:var(--white);border:0;font-size:20px;cursor:pointer;opacity:0;visibility:hidden;transition:.2s}
+.up.on{opacity:1;visibility:visible}
+footer{border-top:1px solid var(--cobalt);padding:34px 0 90px;font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(max-width:860px){.hero,.shop,.cols,.about,.route{grid-template-columns:1fr}.hero .photo{transform:none;aspect-ratio:16/10;order:-1}.tabs{order:3;width:100%;justify-content:space-between;gap:10px}.navcta{order:2}.about .photo{max-width:100%}}
+@media(max-width:520px){.btn{width:100%}.btn.sm{width:auto}.fab span{display:none}.fab{padding:16px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.fab{transition:none}.btn:hover,.fab:hover{transform:none}}
+</style>
 </head>
 <body>
+<div class="bar">Página informativa. Não fazemos vendas online, apenas na loja física.</div>
+<header class="top"><div class="wrap">
+<nav>
+<button class="logo" data-go="home">Dog Shopping</button>
+<div class="tabs" role="tablist" aria-label="Seções do site">
+<button class="tab" role="tab" id="t-home" data-go="home" aria-selected="true" aria-controls="home">Home</button>
+<button class="tab" role="tab" id="t-informacoes" data-go="informacoes" aria-selected="false" aria-controls="informacoes">Informações</button>
+<button class="tab" role="tab" id="t-sobre" data-go="sobre" aria-selected="false" aria-controls="sobre">Sobre nós</button>
+</div>
+<a class="btn s sm navcta" href="https://wa.me/5563992335072" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+</nav>
+</div></header>
 
-    <header>
-        <h1 style="cursor: pointer;" onclick="abrirAba('home', document.querySelector('.menu-topo a:nth-child(1)'))">Dog Shopping</h1>
-        
-        <nav class="menu-topo">
-            <a class="aba-link ativo" onclick="abrirAba('home', this)">Home</a>
-            <a class="aba-link" onclick="abrirAba('informacoes', this)">Informações</a>
-            <a class="aba-link" onclick="abrirAba('sobre', this)">Sobre Nós</a>
-        </nav>
+<main class="wrap">
+<div id="home" role="tabpanel" aria-labelledby="t-home">
+<div class="hero">
+<div>
+<span class="badge" id="badge"><span class="dot"></span><span id="badge-t">Horário: seg a sáb, 7h às 18h</span></span>
+<h1>Venha nos conhecer!</h1>
+<p class="lead">O melhor para o seu pet bem pertinho de você. Rações, remédios, vacinas e acessórios para cães, gatos, aves e animais de fazenda.</p>
+<div class="ctas">
+<a class="btn p" href="#" data-go="informacoes"><i class="bi bi-geo-alt-fill"></i> Como chegar</a>
+<a class="btn s" href="https://wa.me/5563992335072" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+</div>
+</div>
+<div class="photo"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=900&q=80" alt="Cachorro feliz" onerror="this.remove()"></div>
+</div>
 
-        <div class="aviso">
-            Página Informativa<br>
-            Não fazemos vendas online
-        </div>
-    </header>
+<div class="quick">
+<a class="q l" href="https://wa.me/5563992335072" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i><div><b>WhatsApp</b><span>(63) 99233-5072. Tire dúvidas rápido.</span></div></a>
+<a class="q c" href="https://www.google.com/maps/dir/?api=1&destination=R.+Ant%C3%B4nio+Pereira+da+Costa,+Combinado+-+TO,+77350-000" target="_blank" rel="noopener"><i class="bi bi-signpost-2-fill"></i><div><b>Traçar rota</b><span>Abrir o GPS até a loja.</span></div></a>
+<a class="q" href="#" data-go="informacoes"><i class="bi bi-clock-fill"></i><div><b>Seg a sáb</b><span>7h às 18h. Domingos e feriados fechado.</span></div></a>
+</div>
 
-    <!-- ABA 1: HOME (Vitrine) -->
-    <div id="home" class="conteudo-aba ativa">
-        <div class="boas-vindas">
-            <h2>Venha nos conhecer!</h2>
-            <p>O melhor para o seu pet bem pertinho de você.</p>
-        </div>
+<div class="shop">
+<div class="photo"><img src="Fachada.jpg" alt="Fachada da Dog Shopping" onerror="this.remove()"></div>
+<div class="t">
+<h3>Venha conhecer nossa estrutura!</h3>
+<p>Prateleiras cheias, variedade de marcas e ótimos preços. Não fazemos vendas online, apenas na loja física.</p>
+<a class="btn p" href="#" data-go="informacoes"><i class="bi bi-geo-alt-fill"></i> Ver como chegar</a>
+</div>
+</div>
 
-        <section class="carrossel">
-            <div class="carrossel-inner" id="carrossel-inner">
-                <div class="slide" style="background-image: url('https://cobasiblog.blob.core.windows.net/production-ofc/2021/06/coelho-pode-comer-laranja-1.jpg');"></div>
-                <div class="slide" style="background-image: url('https://img.nsctotal.com.br/wp-content/uploads/2023/10/pinscher-preto-944x531.jpg');"></div>
-                <div class="slide" style="background-image: url('https://purina.com.br/sites/default/files/2026-02/Linguagem-dos-gatos-felicidade.jpg');"></div>
-                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1602491453631-e2a5ad90a131?auto=format&fit=crop&w=1200&q=80');"></div>
-                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&w=1200&q=80');"></div>
-                <div class="slide" style="background-image: url('https://imgs.search.brave.com/nTSl-5oTou8F8dd_5ZjmDYbla9Y33kar3pOcorPuOvM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMuZGljaW8uY29t/LmJyL3VwbG9hZC9h/bi9pbS9hbmltYWwt/Y2tlLmpwZz93aWR0/aD02MTA');"></div>
-                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1200&q=80');"></div>
-            </div>
-        
-            <div class="controles-carrossel">
-                <button class="btn-carrossel" id="btn-prev"><i class="bi bi-chevron-left"></i></button>
-                <button class="btn-carrossel" id="btn-next"><i class="bi bi-chevron-right"></i></button>
-            </div>
-        </section>
+<section>
+<h2>Tudo para o seu bicho.</h2>
+<p class="lead">Veja o que você encontra na loja. Para saber de preços e disponibilidade, fale com a gente.</p>
+<div class="chips" id="chips" role="group" aria-label="Filtrar por categoria">
+<button class="chip" data-f="all" aria-pressed="true">Todos</button>
+<button class="chip" data-f="cao" aria-pressed="false">Cachorros</button>
+<button class="chip" data-f="gato" aria-pressed="false">Gatos</button>
+<button class="chip" data-f="ave" aria-pressed="false">Aves</button>
+<button class="chip" data-f="fazenda" aria-pressed="false">Fazenda e outros</button>
+<button class="chip" data-f="util" aria-pressed="false">Utilidades</button>
+</div>
+<div class="grid">
+<article class="card" data-c="cao">
+<div class="photo"><img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=800&q=80" alt="Cachorro" loading="lazy" onerror="this.remove()"></div>
+<div class="b"><h3>Cachorros</h3>
+<div class="it"><div class="th"><img src="https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=200&h=200&fit=crop" alt="" loading="lazy" onerror="this.remove()"></div><div><b>Rações</b><span>Pedigree, Bomguy, Sapeca</span></div></div>
+<div class="it"><div class="th"><img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&h=200&fit=crop" alt="" loading="lazy" onerror="this.remove()"></div><div><b>Vitaminas</b><span>Suplemento vitamínico A, cálcio para filhotes</span></div></div>
+<div class="it"><div class="th"><img src="https://images.unsplash.com/photo-1606425271394-c3ca9aa1fc06?w=200&h=200&fit=crop" alt="" loading="lazy" onerror="this.remove()"></div><div><b>Vacinas</b><span>Vermex, antirrábica</span></div></div>
+<div class="it"><div class="th"><img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=200&h=200&fit=crop" alt="" loading="lazy" onerror="this.remove()"></div><div><b>Remédios</b><span>Antipulgas e carrapatos, vermífugos em comprimido, pomadas cicatrizantes</span></div></div>
+</div></article>
 
-        <!-- CATÁLOGO NOVO: LIVRE E COM ROLAGEM HORIZONTAL -->
-        <section class="catalogo">
-            
-            <!-- SEÇÃO CACHORROS -->
-            <div class="secao-categoria">
-                <!-- FAIXA DA LOJA FÍSICA -->
-        <div class="faixa-loja-fisica">
-            <!-- Coloque a extensão correta da sua foto aqui (ex: Fachada.jpg ou Fachada.png) -->
-            <div class="faixa-img" style="background-image: url('Fachada.jpg');"></div>
-            <div class="faixa-texto">
-                <h3>Venha conhecer nossa estrutura!</h3>
-                <p>Muito mais do que você vê por aqui. Nossa loja física conta com prateleiras cheias, variedade de marcas e otimos preços. NÃO FAZEMOS VENDAS ONLINE, APENAS NA LOJA FÍSICA.</p>
-                <a onclick="abrirAba('informacoes', document.querySelector('.menu-topo a:nth-child(2)'))" class="btn-rota" style="width: fit-content; cursor: pointer;">
-                    <i class="bi bi-geo-alt"></i> Ver como chegar
-                </a>
-            </div>
-        </div>
-                <h3 class="titulo-categoria"><i class="fa-solid fa-dog"></i> Tudo para Cachorros</h3>
-                <div class="horizontal-scroll">
-                    <div class="categoria-card">
-                        <img src="https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=300&h=300&fit=crop" alt="Rações Cachorro" class="img-redonda">
-                        <h4>Rações</h4>
-                        <ul class="lista-itens-card">
-                            <li>Pedigree</li>
-                            <li>Bomguy</li>
-                            <li>Sapeca</li>
-                        </ul>
-                    </div>
-                    <div class="categoria-card">
-                        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&h=300&fit=crop" alt="Vitaminas Cachorro" class="img-redonda">
-                        <h4>Vitaminas</h4>
-                        <ul class="lista-itens-card">
-                            <li>Suplemento Vitamínico A</li>
-                            <li>Cálcio para Filhotes</li>
-                        </ul>
-                    </div>
-                    <div class="categoria-card">
-                        <img src="https://images.unsplash.com/photo-1606425271394-c3ca9aa1fc06?w=300&h=300&fit=crop" alt="Vacinas Cachorro" class="img-redonda">
-                        <h4>Vacinas</h4>
-                        <ul class="lista-itens-card">
-                            <li>Vermex</li>
-                            <li>Antirrábica</li>
-                        </ul>
-                    </div>
-                    <div class="categoria-card">
-                        <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=300&h=300&fit=crop" alt="Remédios Cachorro" class="img-redonda">
-                        <h4>Remédios</h4>
-                        <ul class="lista-itens-card">
-                            <li>Antipulgas e Carrapatos</li>
-                            <li>Vermífugos em Comprimido</li>
-                            <li>Pomadas Cicatrizantes</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+<article class="card" data-c="gato">
+<div class="photo"><img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80" alt="Gato" loading="lazy" onerror="this.remove()"></div>
+<div class="b"><h3>Gatos</h3>
+<div class="it"><div class="th"><img src="https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=200&h=200&fit=crop" alt="" loading="lazy" onerror="this.remove()"></div><div><b>Rações</b><span>Whiskas, Friskies, Finotrato</span></div></div>
+<div class="it"><div class="th"><img src="https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?w=200&h=200&fit=crop" alt="" loading="lazy" onerror="this.remove()"></div><div><b>Vitaminas</b><span>Pasta de malte, polivitamínicos</span></div></div>
+<div class="it"><div><b>Vacinas</b><span>V4 e V5 felina, antirrábica</span></div></div>
+<div class="it"><div><b>Remédios</b><span>Antipulgas pipeta, vermífugos líquidos, Advocate gatos</span></div></div>
+</div></article>
 
-            <!-- SEÇÃO GATOS -->
-            <div class="secao-categoria">
-                <h3 class="titulo-categoria"><i class="fa-solid fa-cat"></i> Tudo para Gatos</h3>
-                <div class="horizontal-scroll">
-                    <div class="categoria-card">
-                        <img src="https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=300&h=300&fit=crop" alt="Rações Gato" class="img-redonda">
-                        <h4>Rações</h4>
-                        <ul class="lista-itens-card">
-                            <li>Whiskas</li>
-                            <li>Friskies</li>
-                            <li>Finotrato</li>
-                        </ul>
-                    </div>
-                    <div class="categoria-card">
-                        <img src="https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?w=300&h=300&fit=crop" alt="Vitaminas Gatos" class="img-redonda">
-                        <h4>Vitaminas</h4>
-                        <ul class="lista-itens-card">
-                            <li>Pasta de Malte</li>
-                            <li>Polivitamínicos</li>
-                        </ul>
-                    </div>
-                    <div class="categoria-card">
-                        <img src="https://imgs.search.brave.com/33jBCyButPj-PP4GfMKFirorbv8afFbCHNwpr9klobs/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bXVsaGVyLmNvbS5i/ci93cC1jb250ZW50/L3VwbG9hZHMvMjAy/MC8wNi9nYXRvLWNv/bS1tLW5hLWNhYmVj/YS0wNjI0LTE0MDB4/ODAwLTEucG5nLndl/YnA" alt="Vacinas Gatos" class="img-redonda">
-                        <h4>Vacinas</h4>
-                        <ul class="lista-itens-card">
-                            <li>V4 e V5 Felina</li>
-                            <li>Antirrábica</li>
-                        </ul>
-                    </div>
-                    <div class="categoria-card">
-                        <img src="https://imgs.search.brave.com/sAPkYORlVHi5vhg7mYOQy9dRm_e0q00Q7LUyuGm9N2I/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9odHRw/Mi5tbHN0YXRpYy5j/b20vRF9OUV9OUF83/ODI5OTgtTUxCODQy/NjkzNjMwMzRfMDUy/MDI1LU8ud2VicA" alt="Remédios Gatos" class="img-redonda">
-                        <h4>Remédios</h4>
-                        <ul class="lista-itens-card">
-                            <li>Antipulgas Pipeta</li>
-                            <li>Vermífugos Líquidos</li>
-                            <li>Advocate Gatos</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+<article class="card" data-c="ave">
+<div class="photo"><img src="https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=800&q=80" alt="Ave" loading="lazy" onerror="this.remove()"></div>
+<div class="b"><h3>Aves</h3>
+<div class="it"><div><b>Rações</b><span>Misturas de sementes, ração extrusada, farinhada</span></div></div>
+<div class="it"><div><b>Vitaminas</b><span>Complexo vitamínico, cálcio e bloco mineral</span></div></div>
+<div class="it"><div><b>Vacinas</b><span>Consultar imunização</span></div></div>
+<div class="it"><div><b>Remédios</b><span>Antiparasitários, pomadas cicatrizantes</span></div></div>
+</div></article>
 
-            <!-- SEÇÃO AVES -->
-            <div class="secao-categoria">
-                <h3 class="titulo-categoria"><i class="fa-solid fa-dove"></i> Tudo para Aves</h3>
-                <div class="horizontal-scroll">
-                    <div class="categoria-card">
-                        <img src="https://imgs.search.brave.com/tXhQx-OMtqtrn2VGcm_O43cMVmnMJAHeGaub1v2kdls/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly90cmV4/cGV0cy5jb20uYnIv/ODc2NS1sYXJnZV9k/ZWZhdWx0L2NvbXBy/YXItcGFzc2Fyby1s/b3Jpcy1tb2x1Y2Fu/by10cmljaG9nbG9z/c3VzLW1vbHVjY2Fu/dXMuanBn" alt="Rações Aves" class="img-redonda">
-                        <h4>Rações</h4>
-                        <ul class="lista-itens-card">
-                            <li>Misturas de Sementes</li>
-                            <li>Ração Extrusada</li>
-                            <li>Farinhada</li>
-                        </ul>
-                    </div>
-                    <div class="categoria-card">
-                        <img src="https://images.tcdn.com.br/img/img_prod/699275/suplemento_vitaminico_avitrin_vitaminas_para_passaros_15ml_1139_1_3e6da89cce7e9e50650d93c5e8c9092a.jpg" alt="Vitaminas Aves" class="img-redonda">
-                        <h4>Vitaminas</h4>
-                        <ul class="lista-itens-card">
-                            <li>Complexo Vitamínico</li>
-                            <li>Cálcio e Bloco Mineral</li>
-                        </ul>
-                    </div>
-                    <div class="categoria-card">
-                        <img src="https://imgs.search.brave.com/DOZt07vKBtKHRMV5LxW8wgfJgTf6ifviSsKDyypcRb0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZW5zLmViYy5jb20u/YnIvTXVpaGNzT2pN/cFUzT1NzeTk5RXU5/ZGZ2RlFNPS8zOTB4/MjQwL3NtYXJ0L2h0/dHBzOi8vYWdlbmNp/YWJyYXNpbC5lYmMu/Y29tLmJyL3NpdGVz/L2RlZmF1bHQvZmls/ZXMvdGh1bWJuYWls/cy9pbWFnZS9zYXJh/bXBvXzMwMTExOWlt/Z18yOTI1MzgyNS5q/cGc_aXRvaz00YVFP/eUVxNQ" alt="Vacinas Aves" class="img-redonda">
-                        <h4>Vacinas</h4>
-                        <ul class="lista-itens-card">
-                            <li>Consultar Imunização</li>
-                        </ul>
-                    </div>
-                    <div class="categoria-card">
-                        <img src="https://imgs.search.brave.com/NK0_c_78CLgi-B3hbrnNCC3UotFSlm63FOhJRjxOZV8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9wZXRk/ZXJtYS5jb20uYnIv/d3AtY29udGVudC91/cGxvYWRzLzIwMjUv/MDcvcGV0ZGVybWEt/cG9tYWRhcy1lLWNy/ZW1lcy1lbS1wZXRz/LTEwMjR4NjgzLmpw/Zw" alt="Remédios Aves" class="img-redonda">
-                        <h4>Remédios</h4>
-                        <ul class="lista-itens-card">
-                            <li>Antiparasitários</li>
-                            <li>Pomadas Cicatrizantes</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- SEÇÃO OUTROS E FAZENDA -->
-            <div class="secao-categoria">
-                <h3 class="titulo-categoria"><i class="fa-solid fa-horse"></i> Outros e Fazenda</h3>
-                <div class="texto-descritivo">
-                    Não cuidamos apenas de cães e gatos! A Dog Shopping também atende grandes criadores e pequenos roedores. Temos linhas dedicadas para <strong>equinos, bovinos e ovinos</strong>, além de tudo o que você precisa para <strong>hamsters, coelhos e muito mais</strong>.
-                </div>
-                <div class="horizontal-scroll">
-                    <div class="categoria-card">
-                        
-                        <h4>Nutrição</h4>
-                        <ul class="lista-itens-card">
-                            <li>Rações Equinos e Bovinos</li>
-                            <li>Suplementos de Pasto</li>
-                        </ul>
-                    </div>
-                    <div class="categoria-card">
-                         <h4>Suplementos</h4>
-                        <ul class="lista-itens-card">
-                            <li>Remédios de Grande Porte</li>
-                            <li>Antiparasitários</li>
-                        </ul>
-                    </div>
-                    <div class="categoria-card">
-                       
-                        <h4>Roedores</h4>
-                        <ul class="lista-itens-card">
-                            <li>Alimentação (Hamsters, Coelhos)</li>
-                            <li>Acessórios e Gaiolas</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+<article class="card w" data-c="fazenda">
+<div class="photo"><img src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&w=800&q=80" alt="Cavalo" loading="lazy" onerror="this.remove()"></div>
+<div class="b"><h3>Fazenda e outros</h3>
+<p>Atendemos criadores e pequenos roedores, com linhas para equinos, bovinos e ovinos, além de hamsters, coelhos e mais.</p>
+<div class="it"><div><b>Nutrição</b><span>Rações para equinos e bovinos, suplementos de pasto</span></div></div>
+<div class="it"><div><b>Suplementos</b><span>Remédios de grande porte, antiparasitários</span></div></div>
+<div class="it"><div><b>Roedores</b><span>Alimentação para hamsters e coelhos, acessórios e gaiolas</span></div></div>
+</div></article>
 
-            <!-- SEÇÃO UTILIDADES -->
-            <div class="secao-categoria">
-                <h3 class="titulo-categoria"><i class="fa-solid fa-basket-shopping"></i> Utilidades</h3>
-                <div class="horizontal-scroll">
-                    <div class="categoria-card">
-                       
-                        <img src="https://m.media-amazon.com/images/I/51F3NOo+FQL._AC_SY300_SX300_QL70_ML2_.jpg" alt="Coleiras e Guias" class="img-redonda">
-                         <h4>Coleiras e Guias</h4>
-                        <ul class="lista-itens-card">
-                            <li>Coleiras e Guias</li>
-                            <li>Caixas de Transporte</li>
-                        </ul>
-                    </div>
-                    <div class="categoria-card">
-                        <img src="https://images.unsplash.com/photo-1535930749574-1399327ce78f?w=300&h=300&fit=crop" alt="Brinquedos" class="img-redonda">
-                        <h4>Dia a Dia</h4>
-                        <ul class="lista-itens-card">
-                            <li>Potes de Ração e Água</li>
-                            <li>Bebedouros Portáteis</li>
-                            <li>Brinquedos Interativos</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
+<article class="card w" data-c="util">
+<div class="photo"><img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=80" alt="Cachorro com coleira" loading="lazy" onerror="this.remove()"></div>
+<div class="b"><h3>Utilidades</h3>
+<div class="it"><div class="th"><img src="https://images.unsplash.com/photo-1535930749574-1399327ce78f?w=200&h=200&fit=crop" alt="" loading="lazy" onerror="this.remove()"></div><div><b>Dia a dia</b><span>Potes de ração e água, bebedouros portáteis, brinquedos interativos</span></div></div>
+<div class="it"><div><b>Coleiras e guias</b><span>Coleiras, guias, caixas de transporte</span></div></div>
+</div></article>
+</div>
+</section>
+</div>
 
-    <!-- ABA 2: INFORMAÇÕES E CONTATOS -->
-    <div id="informacoes" class="conteudo-aba">
-        <div class="info-container">
-            <h2 class="titulo-secao">Informações e Localização</h2>
-            
-            <div class="cards-info-wrapper">
-                <div class="card-info">
-                    <h3><i class="fa-solid fa-address-book"></i> Fale com a Gente</h3>
-                    <ul class="lista-contato">
-                        <li>
-                            <i class="bi bi-whatsapp" style="color: #25D366; font-size: 22px;"></i> 
-                            <div><strong>WhatsApp:</strong><br> <a href="https://wa.me/5563992335072" target="_blank" class="link-contato">(63) 99233-5072</a></div>
-                        </li>
-                        <li>
-                            <i class="bi bi-instagram" style="color: #E1306C; font-size: 22px;"></i> 
-                            <div><strong>Instagram:</strong><br> <a href="https://instagram.com/dogshop_cmb" target="_blank" class="link-contato link-insta">@dogshop_cmb</a></div>
-                        </li>
-                        <li>
-                            <i class="fa-solid fa-store"></i> 
-                            <div><strong>Presencialmente:</strong><br> Quer resolver as coisas "focinho a focinho"? Venha bater um papo ao vivo na loja. O Wi-Fi da vida real não cai e o atendimento é garantido!</div>
-                        </li>
-                    </ul>
-                </div>
+<div id="informacoes" role="tabpanel" aria-labelledby="t-informacoes" hidden>
+<section style="padding-top:48px">
+<h2>Informações e localização.</h2>
+<p class="lead" style="margin-bottom:34px">Quer resolver tudo focinho a focinho? Venha bater um papo ao vivo na loja.</p>
+<div class="route">
+<div><h3>Como chegar à loja</h3><p>R. Antônio Pereira da Costa, Combinado - TO, 77350-000</p></div>
+<a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=R.+Ant%C3%B4nio+Pereira+da+Costa,+Combinado+-+TO,+77350-000" target="_blank" rel="noopener"><i class="bi bi-signpost-2-fill"></i> Traçar rota no GPS</a>
+</div>
+<div class="map"><iframe title="Mapa da Dog Shopping" src="https://maps.google.com/maps?q=R.%20Ant%C3%B4nio%20Pereira%20da%20Costa,%20Combinado%20-%20TO,%2077350-000&t=&z=16&ie=UTF8&iwloc=&output=embed" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+<div class="cols" style="margin-top:20px">
+<div class="panel hi">
+<h3>Fale com a gente</h3>
+<p><strong>WhatsApp:</strong> (63) 99233-5072<br><strong>Instagram:</strong> @dogshop_cmb</p>
+<div class="ctas">
+<a class="btn p" href="https://wa.me/5563992335072" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+<a class="btn s" href="https://instagram.com/dogshop_cmb" target="_blank" rel="noopener"><i class="bi bi-instagram"></i> Instagram</a>
+</div>
+</div>
+<div class="panel">
+<h3>Horário de funcionamento</h3>
+<div class="row" data-d="1,2,3,4,5"><strong>Segunda a sexta</strong><span>7h às 18h</span></div>
+<div class="row" data-d="6"><strong>Sábado</strong><span>7h às 18h</span></div>
+<div class="row" data-d="0"><strong>Domingos e feriados</strong><span>Fechado</span></div>
+</div>
+</div>
+</section>
+</div>
 
-                <div class="card-info">
-                    <h3><i class="fa-solid fa-clock"></i> Horário de Funcionamento</h3>
-                    <ul class="lista-contato">
-                        <li><i class="fa-regular fa-calendar-check" style="color: #000080;"></i><div><strong>Segunda a Sexta:</strong><br> 07:00h às 18:00h</div></li>
-                        <li><i class="fa-regular fa-calendar-check" style="color: #000080;"></i><div><strong>Sábado:</strong><br> 07:00h às 18:00h</div></li>
-                        <li><i class="fa-solid fa-calendar-xmark" style="color: #cc0000;"></i><div><strong>Domingos e Feriados:</strong><br> Fechado (Os pets também precisam de um merecido descanso!)</div></li>
-                    </ul>
-                </div>
-            </div>
+<div id="sobre" role="tabpanel" aria-labelledby="t-sobre" hidden>
+<section style="padding-top:48px">
+<h2>Conheça nossa história.</h2>
+<div class="about">
+<div class="photo"><img src="tontonho.jpeg" alt="Antônio Zacarias e sua esposa" onerror="this.remove()"></div>
+<div>
+<p>Olá! Me chamo <strong>Antônio Zacarias</strong>, mas aqui em Combinado todos me conhecem como <strong>Tontonho</strong>. Sou paraibano de coração e apaixonado por animais desde sempre.</p>
+<p>A Dog Shopping nasceu em <strong>2016</strong> do meu desejo de oferecer o que há de melhor para os nossos pets: cuidado, conforto e produtos de qualidade, unindo o amor pelos animais ao compromisso com os tutores.</p>
+<div class="blob">Na nossa loja, quem entra como cliente, sai como amigo!</div>
+</div>
+</div>
+<h3 style="margin-top:56px;font-size:clamp(28px,4vw,40px)">O que você encontra aqui</h3>
+<div class="gal">
+<div class="photo"><img src="Passaros.jpeg" alt="Prateleira de aves" loading="lazy" onerror="this.remove()"><span>Aves</span></div>
+<div class="photo"><img src="Cavalos.jpeg" alt="Produtos para cavalos" loading="lazy" onerror="this.remove()"><span>Cavalos</span></div>
+<div class="photo"><img src="Shampooo.jpeg" alt="Shampoos e higiene" loading="lazy" onerror="this.remove()"><span>Higiene</span></div>
+</div>
+<p class="lead" style="margin-top:44px">Venha conhecer a Dog Shopping. Estamos de braços abertos para receber você e o seu parceiro de quatro patas (ou de asas)!</p>
+</section>
+</div>
+</main>
 
-            <div class="card-mapa">
-                <iframe src="https://maps.google.com/maps?q=R.%20Ant%C3%B4nio%20Pereira%20da%20Costa,%20Combinado%20-%20TO,%2077350-000&t=&z=16&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                <a href="https://www.google.com/maps/dir/?api=1&destination=R.+Antônio+Pereira+da+Costa,+Combinado+-+TO,+77350-000" target="_blank" class="btn-rota">
-                    <i class="fa-solid fa-route"></i> Traçar Rota de GPS
-                </a>
-            </div>
-        </div>
-    </div>
+<footer><div class="wrap">
+<span>Dog Shopping · R. Antônio Pereira da Costa, Combinado - TO</span>
+<span>(63) 99233-5072 · @dogshop_cmb</span>
+</div></footer>
 
-    <!-- ABA 3: SOBRE NÓS -->
-    <div id="sobre" class="conteudo-aba">
-        <div class="info-container">
+<a class="fab" href="https://wa.me/5563992335072" target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><i class="bi bi-whatsapp"></i><span>Chamar no WhatsApp</span></a>
+<button class="up" id="up" aria-label="Voltar ao topo"><i class="bi bi-arrow-up"></i></button>
 
-            <h2 class="titulo-secao">Conheça Nossa História</h2>
-            <div class="sobre-card">
-                <div class="sobre-imagem">
-                    <img src="tontonho.jpeg" alt="Antônio Zacarias e sua esposa">
-                </div>
-                <div class="sobre-texto">
-                    <p>Olá! Me chamo <strong>Antônio Zacarias</strong>, mas aqui em Combinado todos me conhecem como <strong>Tontonho</strong>. Sou paraibano de coração e apaixonado por animais desde sempre.</p>
-                    
-                    <p>A Dog Shopping nasceu em <strong>2016</strong> a partir do meu desejo sincero de oferecer o que há de melhor para os nossos pets. Ao abrir as portas, meu grande objetivo sempre foi proporcionar cuidado, conforto e produtos de excelente qualidade, unindo o amor que sinto pelos animais ao compromisso com os tutores.</p>
-         
-                    
-                    <div class="missao-destaque">
-                        <i class="fa-solid fa-quote-left" style="color: #ccc; margin-right: 10px;"></i>
-                        Na nossa loja, quem entra como cliente, sai como amigo!
-                    </div>
-                    
-                    <p style="margin-top: 15px;">Venha conhecer a Dog Shopping. Estamos de braços abertos para receber você e o seu parceiro de quatro patas (ou de asas)!</p>
-                    
-                </div>
-            </div>
-        </div>         
-      </div>
-             <!-- GALERIA DE PRODUTOS -->
-            <h3 class="titulo-categoria" style="margin-top: 40px; justify-content: center; border: none; font-size: 28px;">O que você encontra aqui</h3>
-            
-            <div class="galeria-loja">
-                <!-- Dica: ajuste para Pássaros.jpg, Cavalos.jpeg, etc. dependendo do seu arquivo -->
-                <div class="galeria-item">
-                    <img src="Passaros.jpeg" alt="Prateleira de Aves">
-                </div>
-                <div class="galeria-item">
-                    <img src="Cavalos.jpeg" alt="Produtos para Cavalos">
-                </div>
-                <div class="galeria-item">
-                    <img src="Shampooo.jpeg" alt="Seção de Shampoos e Higiene">
-                </div>
-            </div>
-    </div>
-    
-
-    <!-- Botões Flutuantes -->
-    <a href="https://wa.me/5563992335072" target="_blank" class="whatsapp-flutuante" aria-label="Falar no WhatsApp">
-        <i class="bi bi-whatsapp"></i>
-    </a>
-
-    <button id="btn-voltar-topo" class="btn-voltar-topo" onclick="voltarAoTopo()" aria-label="Voltar ao topo da página">
-        <i class="bi bi-arrow-up"></i>
-    </button>
-
-    <!-- Rodapé Premium -->
-    <footer class="rodape-premium">
-        <div class="rodape-container">
-            <div class="rodape-coluna">
-                <h3>Dog Shopping</h3>
-                <p>Na nossa loja, quem entra como cliente, sai como amigo! O melhor cuidado para o seu pet e para os animais da sua fazenda.</p>
-            </div>
-            <div class="rodape-coluna">
-                <h3 class="sem-fonte">Navegação Rápida</h3>
-                <ul>
-                    <li><i class="bi bi-chevron-right"></i> <a onclick="abrirAba('home', document.querySelector('.menu-topo a:nth-child(1)'))">Página Inicial</a></li>
-                    <li><i class="bi bi-chevron-right"></i> <a onclick="abrirAba('informacoes', document.querySelector('.menu-topo a:nth-child(2)'))">Como Chegar</a></li>
-                    <li><i class="bi bi-chevron-right"></i> <a onclick="abrirAba('sobre', document.querySelector('.menu-topo a:nth-child(3)'))">Conheça o Tontonho</a></li>
-                </ul>
-            </div>
-            <div class="rodape-coluna">
-                <h3 class="sem-fonte">Contato</h3>
-                <ul>
-                    <li><i class="bi bi-geo-alt"></i> R. Antônio Pereira da Costa, Combinado - TO</li>
-                    <li><i class="bi bi-telephone"></i> (63) 99233-5072</li>
-                    <li><i class="bi bi-instagram"></i> @dogshop_cmb</li>
-                </ul>
-            </div>
-        </div>
-        <div class="rodape-bottom">
-            &copy; 2026 Dog Shopping. Todos os direitos reservados. Desenvolvido com dedicação.
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script>
-        function abrirAba(idAba, elementoClicado) {
-            const abas = document.querySelectorAll('.conteudo-aba');
-            abas.forEach(aba => aba.classList.remove('ativa'));
-            document.getElementById(idAba).classList.add('ativa');
-            
-            const links = document.querySelectorAll('.aba-link');
-            links.forEach(link => link.classList.remove('ativo'));
-            
-            if(elementoClicado) {
-                elementoClicado.classList.add('ativo');
-            } else {
-                if(idAba === 'home') document.querySelector('.menu-topo a:nth-child(1)').classList.add('ativo');
-                if(idAba === 'informacoes') document.querySelector('.menu-topo a:nth-child(2)').classList.add('ativo');
-                if(idAba === 'sobre') document.querySelector('.menu-topo a:nth-child(3)').classList.add('ativo');
-            }
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        const btnTopo = document.getElementById('btn-voltar-topo');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                btnTopo.classList.add('mostrar');
-            } else {
-                btnTopo.classList.remove('mostrar');
-            }
-        });
-
-        function voltarAoTopo() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        const carrosselInner = document.getElementById('carrossel-inner');
-        const slides = document.querySelectorAll('.slide');
-        const totalSlides = slides.length;
-        let slideAtual = 0;
-        const tempoSlide = 4000;
-        let intervaloCarrossel;
-
-        function mostrarSlide(index) {
-            slideAtual = (index + totalSlides) % totalSlides;
-            carrosselInner.style.transform = `translateX(-${slideAtual * 100}%)`;
-        }
-        function proximoSlide() { mostrarSlide(slideAtual + 1); }
-        function slideAnterior() { mostrarSlide(slideAtual - 1); }
-        function iniciarCarrossel() { intervaloCarrossel = setInterval(proximoSlide, tempoSlide); }
-
-        document.getElementById('btn-next').addEventListener('click', () => { proximoSlide(); clearInterval(intervaloCarrossel); iniciarCarrossel(); });
-        document.getElementById('btn-prev').addEventListener('click', () => { slideAnterior(); clearInterval(intervaloCarrossel); iniciarCarrossel(); });
-
-        iniciarCarrossel();
-    </script>
+<script>
+function go(id){
+  document.querySelectorAll('[role=tabpanel]').forEach(p=>p.hidden=p.id!==id);
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.go===id));
+  window.scrollTo({top:0});
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){e.preventDefault();go(b.dataset.go)}});
+document.getElementById('chips').addEventListener('click',e=>{
+  const c=e.target.closest('.chip');if(!c)return;
+  document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===c));
+  document.querySelectorAll('.card').forEach(k=>k.hidden=c.dataset.f!=='all'&&k.dataset.c!==c.dataset.f);
+});
+const up=document.getElementById('up');
+addEventListener('scroll',()=>up.classList.toggle('on',scrollY>400));
+up.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+(function(){
+  const n=new Date(),d=n.getDay(),h=n.getHours()+n.getMinutes()/60;
+  const open=d>=1&&d<=6&&h>=7&&h<18;
+  const b=document.getElementById('badge');
+  b.classList.toggle('on',open);
+  document.getElementById('badge-t').textContent=open?'Aberto agora até às 18h':(d===0?'Fechado hoje. Abrimos segunda às 7h':'Fechado agora. Abrimos às 7h');
+  document.querySelectorAll('.row[data-d]').forEach(r=>{if(r.dataset.d.split(',').includes(String(d)))r.classList.add('today')});
+})();
+</script>
 </body>
 </html>
