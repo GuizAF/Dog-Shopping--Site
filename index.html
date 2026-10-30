@@ -7,9 +7,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<!-- Adicionado o FontAwesome para a patinha funcionar perfeitamente -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-:root{--cobalt:#061fff;--lime:#d3ff56;--blush:#ffcfd1;--lav:#efe5ff;--bloom:#ceb3ff;--soft:#dfceff;--white:#fff;
---font:'Good Sans','DM Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+:root{
+  /* Paleta Original Restaurada */
+  --cobalt:#061fff;
+  --lime:#d3ff56;
+  --blush:#ffcfd1;
+  --lav:#efe5ff;
+  --bloom:#ceb3ff;
+  --soft:#dfceff;
+  --white:#fff;
+  --font:'Good Sans','DM Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif
+}
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--lav);color:var(--cobalt);font:400 16px/1.5 var(--font);letter-spacing:-.015em;font-feature-settings:"ss01","cv11"}
@@ -18,12 +29,39 @@ a{color:inherit}h1,h2,h3,p,ul{margin:0}ul{padding:0;list-style:none}img{display:
 .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
 .bar{background:var(--cobalt);color:var(--white);text-align:center;font-size:13px;padding:11px 16px}
 header.top{position:sticky;top:0;z-index:50;background:var(--lav);border-bottom:1px solid var(--cobalt)}
-nav{display:flex;align-items:center;justify-content:space-between;gap:10px 24px;padding:12px 0;flex-wrap:wrap}
-.logo{font-weight:700;font-size:26px;letter-spacing:-.05em;background:none;border:0;color:inherit;font-family:inherit;padding:0;cursor:pointer}
-.tabs{display:flex;gap:26px;order:2}
-.tab{background:none;border:0;border-bottom:2px solid transparent;color:inherit;font:500 12px/2.2 var(--font);text-transform:uppercase;letter-spacing:.02em;cursor:pointer;padding:0}
-.tab[aria-selected=true]{border-color:var(--cobalt)}
-.navcta{order:3}
+
+/* Navegação Centralizada com Animação e Logo à Direita */
+nav{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;flex-wrap:wrap;}
+.logo-area { display: flex; flex: 1; justify-content: flex-start; }
+.logo{font-weight:700;font-size:clamp(32px, 5vw, 42px);letter-spacing:-.05em;background:none;border:0;color:inherit;font-family:inherit;padding:0;cursor:pointer}
+.tabs-area { display: flex; flex: 1; justify-content: center; }
+.tabs{display:flex;gap:32px;position:relative;}
+.tab{background:none;border:0;color:inherit;font:500 14px/2.2 var(--font);text-transform:uppercase;letter-spacing:.02em;cursor:pointer;padding:0 4px 8px;}
+.tab-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background-color: var(--cobalt);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 3px 3px 0 0;
+    width: 0;
+}
+.icon-area { display: flex; flex: 1; justify-content: flex-end; }
+.logo-container {
+    width: 60px; /* Aumentado para mais destaque */
+    height: 60px; /* Aumentado para mais destaque */
+    background-color: var(--cobalt);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.logo-container i {
+    color: #39ff14; /* Verde Neon */
+    font-size: 30px; /* Patinha um pouco maior */
+}
+
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:500 16px/1.1 var(--font);text-transform:uppercase;text-decoration:none;padding:14px 32px;border-radius:6.95px;border:1px solid var(--cobalt);cursor:pointer;transition:transform .15s}
 .btn:hover{transform:translateY(-2px)}
 .btn.sm{padding:10px 18px;font-size:13px}
@@ -37,7 +75,7 @@ h3{font-size:30px;font-weight:700;line-height:1.05;letter-spacing:-.04em}
 .hero{display:grid;grid-template-columns:1.1fr 1fr;gap:44px;align-items:center;padding:48px 0 56px}
 .hero .lead{margin:22px 0 28px}
 .badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--cobalt);border-radius:99px;padding:6px 14px;font-size:14px;font-weight:500;margin-bottom:20px;background:var(--white)}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--cobalt)}
+.dot{width:10px;height:10px;border-radius:50%;background:#ff3b30}
 .badge.on .dot{background:#18c25a}
 .photo{position:relative;border-radius:20px;overflow:hidden;background:var(--soft);border:1px solid var(--cobalt)}
 .photo img{width:100%;height:100%;object-fit:cover}
@@ -81,13 +119,21 @@ section{padding-bottom:90px}
 .gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:44px}
 .gal .photo{aspect-ratio:4/3}
 .gal span{position:absolute;left:16px;bottom:14px;background:var(--lime);border:1px solid var(--cobalt);border-radius:99px;padding:4px 14px;font-weight:700;font-size:15px}
-.fab{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--lime);color:var(--cobalt);border:1px solid var(--cobalt);border-radius:99px;padding:14px 22px;display:flex;align-items:center;gap:10px;font:700 16px/1 var(--font);text-decoration:none}
+.fab{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:60;background:#0b5d2e;color:#fff;border:1px solid #0b5d2e;border-radius:99px;padding:14px 22px;display:flex;align-items:center;gap:10px;font:700 16px/1 var(--font);text-decoration:none}
 .fab i{font-size:22px}.fab:hover{transform:translateY(-3px)}
 .up{position:fixed;left:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:60;width:50px;height:50px;border-radius:50%;background:var(--cobalt);color:var(--white);border:0;font-size:20px;cursor:pointer;opacity:0;visibility:hidden;transition:.2s}
 .up.on{opacity:1;visibility:visible}
 footer{border-top:1px solid var(--cobalt);padding:34px 0 90px;font-size:14px}
 footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-@media(max-width:860px){.hero,.shop,.cols,.about,.route{grid-template-columns:1fr}.hero .photo{transform:none;aspect-ratio:16/10;order:-1}.tabs{order:3;width:100%;justify-content:space-between;gap:10px}.navcta{order:2}.about .photo{max-width:100%}}
+
+@media(max-width:860px){
+    .hero,.shop,.cols,.about,.route{grid-template-columns:1fr}
+    .hero .photo{transform:none;aspect-ratio:16/10;order:-1}
+    nav { flex-direction: column; gap: 16px; }
+    .logo-area, .tabs-area, .icon-area { justify-content: center; flex: unset; }
+    .tabs{width:100%;justify-content:space-between;gap:10px}
+    .about .photo{max-width:100%}
+}
 @media(max-width:520px){.btn{width:100%}.btn.sm{width:auto}.fab span{display:none}.fab{padding:16px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.fab{transition:none}.btn:hover,.fab:hover{transform:none}}
 </style>
@@ -96,13 +142,23 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <div class="bar">Página informativa. Não fazemos vendas online, apenas na loja física.</div>
 <header class="top"><div class="wrap">
 <nav>
-<button class="logo" data-go="home">Dog Shopping</button>
-<div class="tabs" role="tablist" aria-label="Seções do site">
-<button class="tab" role="tab" id="t-home" data-go="home" aria-selected="true" aria-controls="home">Home</button>
-<button class="tab" role="tab" id="t-informacoes" data-go="informacoes" aria-selected="false" aria-controls="informacoes">Informações</button>
-<button class="tab" role="tab" id="t-sobre" data-go="sobre" aria-selected="false" aria-controls="sobre">Sobre nós</button>
+<div class="logo-area">
+    <button class="logo" data-go="home">Dog Shopping</button>
 </div>
-<a class="btn s sm navcta" href="https://wa.me/5563992335072" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+<div class="tabs-area">
+    <div class="tabs" role="tablist" aria-label="Seções do site">
+        <button class="tab" role="tab" id="t-home" data-go="home" aria-selected="true" aria-controls="home">Home</button>
+        <button class="tab" role="tab" id="t-informacoes" data-go="informacoes" aria-selected="false" aria-controls="informacoes">Informações</button>
+        <button class="tab" role="tab" id="t-sobre" data-go="sobre" aria-selected="false" aria-controls="sobre">Sobre nós</button>
+        <div id="tab-indicator" class="tab-indicator"></div>
+    </div>
+</div>
+<div class="icon-area">
+    <div class="logo-container">
+        <!-- Aqui está a patinha pedida! -->
+        <i class="fa-solid fa-paw"></i>
+    </div>
+</div>
 </nav>
 </div></header>
 
@@ -110,21 +166,11 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <div id="home" role="tabpanel" aria-labelledby="t-home">
 <div class="hero">
 <div>
-<span class="badge" id="badge"><span class="dot"></span><span id="badge-t">Horário: seg a sáb, 7h às 18h</span></span>
+<span class="badge" id="badge"><span class="dot"></span><span id="badge-t">Calculando horário...</span></span>
 <h1>Venha nos conhecer!</h1>
 <p class="lead">O melhor para o seu pet bem pertinho de você. Rações, remédios, vacinas e acessórios para cães, gatos, aves e animais de fazenda.</p>
-<div class="ctas">
-<a class="btn p" href="#" data-go="informacoes"><i class="bi bi-geo-alt-fill"></i> Como chegar</a>
-<a class="btn s" href="https://wa.me/5563992335072" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
-</div>
 </div>
 <div class="photo"><img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=900&q=80" alt="Cachorro feliz" onerror="this.remove()"></div>
-</div>
-
-<div class="quick">
-<a class="q l" href="https://wa.me/5563992335072" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i><div><b>WhatsApp</b><span>(63) 99233-5072. Tire dúvidas rápido.</span></div></a>
-<a class="q c" href="https://www.google.com/maps/dir/?api=1&destination=R.+Ant%C3%B4nio+Pereira+da+Costa,+Combinado+-+TO,+77350-000" target="_blank" rel="noopener"><i class="bi bi-signpost-2-fill"></i><div><b>Traçar rota</b><span>Abrir o GPS até a loja.</span></div></a>
-<a class="q" href="#" data-go="informacoes"><i class="bi bi-clock-fill"></i><div><b>Seg a sáb</b><span>7h às 18h. Domingos e feriados fechado.</span></div></a>
 </div>
 
 <div class="shop">
@@ -132,7 +178,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <div class="t">
 <h3>Venha conhecer nossa estrutura!</h3>
 <p>Prateleiras cheias, variedade de marcas e ótimos preços. Não fazemos vendas online, apenas na loja física.</p>
-<a class="btn p" href="#" data-go="informacoes"><i class="bi bi-geo-alt-fill"></i> Ver como chegar</a>
+<button class="btn p" data-go="informacoes" style="margin-top: 8px;">Ver Informações</button>
 </div>
 </div>
 
@@ -191,6 +237,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <div class="it"><div><b>Coleiras e guias</b><span>Coleiras, guias, caixas de transporte</span></div></div>
 </div></article>
 </div>
+<h3 style="margin-top:56px;font-size:clamp(28px,4vw,40px)">O que você encontra aqui</h3>
+<div class="gal">
+<div class="photo"><img src="Passaros.jpeg" alt="Prateleira de aves" loading="lazy" onerror="this.remove()"><span>Aves</span></div>
+<div class="photo"><img src="Cavalos.jpeg" alt="Produtos para cavalos" loading="lazy" onerror="this.remove()"><span>Cavalos</span></div>
+<div class="photo"><img src="Shampooo.jpeg" alt="Shampoos e higiene" loading="lazy" onerror="this.remove()"><span>Higiene</span></div>
+</div>
 </section>
 </div>
 
@@ -233,12 +285,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <div class="blob">Na nossa loja, quem entra como cliente, sai como amigo!</div>
 </div>
 </div>
-<h3 style="margin-top:56px;font-size:clamp(28px,4vw,40px)">O que você encontra aqui</h3>
-<div class="gal">
-<div class="photo"><img src="Passaros.jpeg" alt="Prateleira de aves" loading="lazy" onerror="this.remove()"><span>Aves</span></div>
-<div class="photo"><img src="Cavalos.jpeg" alt="Produtos para cavalos" loading="lazy" onerror="this.remove()"><span>Cavalos</span></div>
-<div class="photo"><img src="Shampooo.jpeg" alt="Shampoos e higiene" loading="lazy" onerror="this.remove()"><span>Higiene</span></div>
-</div>
 <p class="lead" style="margin-top:44px">Venha conhecer a Dog Shopping. Estamos de braços abertos para receber você e o seu parceiro de quatro patas (ou de asas)!</p>
 </section>
 </div>
@@ -253,26 +299,63 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <button class="up" id="up" aria-label="Voltar ao topo"><i class="bi bi-arrow-up"></i></button>
 
 <script>
+// Função para atualizar a posição da barra deslizante do Menu
+function updateIndicator(tabElement) {
+    const indicator = document.getElementById('tab-indicator');
+    if(indicator && tabElement) {
+        indicator.style.width = tabElement.offsetWidth + 'px';
+        indicator.style.left = tabElement.offsetLeft + 'px';
+    }
+}
+
 function go(id){
   document.querySelectorAll('[role=tabpanel]').forEach(p=>p.hidden=p.id!==id);
-  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.go===id));
+  document.querySelectorAll('.tab').forEach(t=>{
+      const isSelected = t.dataset.go === id;
+      t.setAttribute('aria-selected', isSelected);
+      if(isSelected) updateIndicator(t);
+  });
   window.scrollTo({top:0});
 }
-document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){e.preventDefault();go(b.dataset.go)}});
+
+document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-go]');
+    if(b){
+        e.preventDefault();
+        go(b.dataset.go)
+    }
+});
+
+// Atualiza a barrinha quando a página carrega ou quando a tela muda de tamanho
+window.addEventListener('load', () => {
+    const activeTab = document.querySelector('.tab[aria-selected="true"]');
+    if(activeTab) updateIndicator(activeTab);
+});
+window.addEventListener('resize', () => {
+    const activeTab = document.querySelector('.tab[aria-selected="true"]');
+    if(activeTab) updateIndicator(activeTab);
+});
+
 document.getElementById('chips').addEventListener('click',e=>{
   const c=e.target.closest('.chip');if(!c)return;
   document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===c));
   document.querySelectorAll('.card').forEach(k=>k.hidden=c.dataset.f!=='all'&&k.dataset.c!==c.dataset.f);
 });
+
 const up=document.getElementById('up');
 addEventListener('scroll',()=>up.classList.toggle('on',scrollY>400));
 up.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+
+// Lógica de tempo real sincronizada com o celular do usuário
 (function(){
   const n=new Date(),d=n.getDay(),h=n.getHours()+n.getMinutes()/60;
   const open=d>=1&&d<=6&&h>=7&&h<18;
   const b=document.getElementById('badge');
   b.classList.toggle('on',open);
-  document.getElementById('badge-t').textContent=open?'Aberto agora até às 18h':(d===0?'Fechado hoje. Abrimos segunda às 7h':'Fechado agora. Abrimos às 7h');
+  
+  // Textos definidos exatamente como você pediu
+  document.getElementById('badge-t').textContent = open ? 'Aberto até às 18h' : 'Fechado agora. Abrimos às 7h';
+  
   document.querySelectorAll('.row[data-d]').forEach(r=>{if(r.dataset.d.split(',').includes(String(d)))r.classList.add('today')});
 })();
 </script>
